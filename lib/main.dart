@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
+import 'package:my_restaurant_frontend_app/utils/routes.dart';
 
 import 'pages/splash_screen.dart';
-import 'utils/routes.dart';
 
 void main() {
   runApp(MyApp());

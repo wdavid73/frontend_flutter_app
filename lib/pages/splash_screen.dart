@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/my_navigator.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
+import 'package:my_restaurant_frontend_app/widgets/button_tap.dart';
 import 'package:my_restaurant_frontend_app/widgets/icon_container.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -30,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              color: Colors.deepPurpleAccent,
+              color: MyColors.darkPrimaryColor,
             ),
           ),
           Column(
@@ -76,6 +78,11 @@ class _SplashScreenState extends State<SplashScreen> {
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold),
+                    ),
+                    ButtonTap(
+                      text: '!Tap this',
+                      icon: Icons.arrow_forward_outlined,
+                      onPressed: () => MyNavigator.goToHome(context),
                     )
                   ],
                 ),
