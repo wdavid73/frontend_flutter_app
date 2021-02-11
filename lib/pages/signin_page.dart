@@ -211,41 +211,38 @@ class _SignUpPageState extends State<SignUpPage> {
                   },
                 ),
                 selectPosition(responsive),
+                GestureDetector(
+                  onTap: () {
+                    this._register();
+                  },
+                  child: SizedBox(
+                    height: responsive.height * 0.07,
+                    width: responsive.width * 0.7,
+                    child: Card(
+                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      color: MyColors.darkPrimaryColor,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Center(
+                          child: Text(
+                            "Register",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: responsive.dp(2),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            this._register();
-          },
-          child: SizedBox(
-            height: responsive.height * 0.07,
-            width: responsive.width * 0.7,
-            child: Card(
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(40),
-              ),
-              color: MyColors.darkPrimaryColor,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Center(
-                  child: Text(
-                    "Register",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: responsive.dp(2),
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: responsive.height * 0.05,
-        )
       ],
     );
   }
