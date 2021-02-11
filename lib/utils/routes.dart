@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/pages/home_page.dart';
 import 'package:my_restaurant_frontend_app/pages/login_page.dart';
-import 'package:my_restaurant_frontend_app/pages/signup_page.dart';
+import 'package:my_restaurant_frontend_app/pages/signin_page.dart';
 
 var routes = <String, WidgetBuilder>{
   "/home": (BuildContext context) => MyHomePage(title: "My Home Page"),
