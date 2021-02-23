@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/my_navigator.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
-import 'package:my_restaurant_frontend_app/widgets/button_tap.dart';
 import 'package:my_restaurant_frontend_app/widgets/icon_container.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -61,32 +60,32 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 flex: 2,
               ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    CircularProgressIndicator(
-                      backgroundColor: Colors.white,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20),
-                    ),
-                    Text(
-                      "Loading...",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    ButtonTap(
-                      text: '!Tap this',
-                      icon: Icons.arrow_forward_outlined,
-                      onPressed: () => MyNavigator.goToHome(context),
-                    )
-                  ],
-                ),
-              )
+              // Expanded(
+              //   flex: 1,
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: <Widget>[
+              //       // CircularProgressIndicator(
+              //       //   backgroundColor: Colors.white,
+              //       // ),
+              //       // Padding(
+              //       //   padding: EdgeInsets.only(top: 20),
+              //       // ),
+              //       // Text(
+              //       //   "Loading...",
+              //       //   style: TextStyle(
+              //       //       color: Colors.white,
+              //       //       fontSize: 18,
+              //       //       fontWeight: FontWeight.bold),
+              //       // ),
+              //       // ButtonTap(
+              //       //   text: '!Tap this',
+              //       //   icon: Icons.arrow_forward_outlined,
+              //       //   onPressed: () => MyNavigator.goToHome(context),
+              //       // )
+              //     ],
+              //   ),
+              // )
             ],
           )
         ],

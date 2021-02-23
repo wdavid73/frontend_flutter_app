@@ -2,21 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/widgets/icon_container.dart';
-import 'package:my_restaurant_frontend_app/widgets/sign_in_form.dart';
+import 'package:my_restaurant_frontend_app/widgets/sign_in_restaurant_form.dart';
 
-class SignInPage extends StatefulWidget {
+class SignInRestaurant extends StatefulWidget {
   @override
-  _SignInPageState createState() => _SignInPageState();
+  _SignInRestaurantState createState() => _SignInRestaurantState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignInRestaurantState extends State<SignInRestaurant> {
   @override
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive(context);
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: MyColors.darkPrimaryColor,
+        elevation: 0,
         title: Text(
-          "Sign in",
+          "Sign in Restaurant",
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
@@ -25,9 +28,6 @@ class _SignInPageState extends State<SignInPage> {
             fontSize: responsive.dp(2),
           ),
         ),
-        backgroundColor: MyColors.darkPrimaryColor,
-        centerTitle: true,
-        elevation: 0,
       ),
       body: Stack(
         children: <Widget>[
@@ -44,13 +44,9 @@ class _SignInPageState extends State<SignInPage> {
                 children: <Widget>[
                   Column(
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 3),
-                        child: IconContainer(
-                          size: responsive.dp(12),
-                        ),
-                      )
+                      IconContainer(
+                        size: responsive.dp(19),
+                      ),
                     ],
                   ),
                 ],
@@ -60,7 +56,7 @@ class _SignInPageState extends State<SignInPage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: responsive.height * 0.7,
+              height: responsive.height * 0.6,
               width: responsive.width,
               decoration: new BoxDecoration(
                 color: Colors.white,
@@ -76,7 +72,7 @@ class _SignInPageState extends State<SignInPage> {
                 children: <Widget>[
                   Expanded(
                     child: SingleChildScrollView(
-                      child: SigInForm(),
+                      child: SignInRestaurantForm(),
                     ),
                   ),
                 ],

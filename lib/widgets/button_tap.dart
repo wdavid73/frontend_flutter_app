@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
@@ -6,18 +7,21 @@ class ButtonTap extends StatefulWidget {
   final String text;
   final IconData icon;
   final GestureTapCallback onPressed;
-  final Color iconColor;
+  final Color iconColor, fillColor;
   final bool textBold, withShadow;
+  final double width;
 
-  ButtonTap(
-      {Key key,
-      @required this.text,
-      @required this.icon,
-      @required this.onPressed,
-      this.iconColor,
-      this.textBold = false,
-      this.withShadow = false})
-      : assert(text != null),
+  ButtonTap({
+    Key key,
+    @required this.text,
+    @required this.icon,
+    @required this.onPressed,
+    @required this.width,
+    this.iconColor,
+    this.textBold = false,
+    this.withShadow = false,
+    this.fillColor,
+  })  : assert(text != null),
         assert(icon != null),
         super(key: key);
 
@@ -32,7 +36,7 @@ class _ButtonTapState extends State<ButtonTap> {
     return Padding(
       padding: const EdgeInsets.only(top: 15.0),
       child: Container(
-        width: responsive.width * 0.7,
+        width: responsive.width * widget.width,
         decoration: widget.withShadow
             ? BoxDecoration(
                 borderRadius: const BorderRadius.all(
@@ -49,36 +53,43 @@ class _ButtonTapState extends State<ButtonTap> {
               )
             : null,
         child: RawMaterialButton(
-            fillColor: MyColors.accentColor,
-            splashColor: MyColors.defaultPrimaryColor,
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Icon(
-                    widget.icon,
-                    color: widget.iconColor != null
-                        ? widget.iconColor
-                        : Colors.white,
-                  ),
-                  SizedBox(
-                    width: 25.0,
-                  ),
-                  Text(
-                    '${widget.text}',
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: responsive.dp(2),
-                      fontWeight: widget.textBold ? FontWeight.bold : null,
-                    ),
-                  )
-                ],
-              ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30),
+            child: Stack(
+              alignment: Alignment.centerRight,
+              children: <Widget>[
+                Row(
+                  //mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '${widget.text}',
+                      maxLines: 1,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: responsive.dp(2),
+                        fontWeight: widget.textBold ? FontWeight.bold : null,
+                      ),
+                    )
+                  ],
+                ),
+                Icon(
+                  widget.icon,
+                  color: widget.iconColor != null
+                      ? widget.iconColor
+                      : Colors.white,
+                  size: responsive.dp(2.8),
+                ),
+              ],
             ),
-            onPressed: widget.onPressed,
-            shape: const StadiumBorder()),
+          ),
+          fillColor: widget.fillColor != null
+              ? widget.fillColor
+              : MyColors.accentColor,
+          splashColor: MyColors.defaultPrimaryColor,
+          onPressed: widget.onPressed,
+          shape: const StadiumBorder(),
+        ),
       ),
     );
   }

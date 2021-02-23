@@ -23,7 +23,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _signIn() {
-    MyNavigator.goToSignUp(context);
+    MyNavigator.goToSignIn(context);
+  }
+
+  _signInRestaurant() {
+    MyNavigator.goToSignInRestaurant(context);
   }
 
   @override
@@ -82,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         Center(
                           child: ButtonTap(
+                            width: 0.7,
                             text: "Log in",
                             textBold: true,
                             icon: Icons.login_outlined,
@@ -93,17 +98,47 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         Center(
-                          child: ButtonTap(
-                            text: "Sign In",
-                            textBold: true,
-                            icon: Icons.arrow_forward_ios_outlined,
-                            onPressed: () {
-                              this._signIn();
-                            },
-                            iconColor: MyColors.textPrimaryColor,
-                            withShadow: false,
+                          child: Column(
+                            children: [
+                              ButtonTap(
+                                width: 0.7,
+                                text: "Sign In a User",
+                                textBold: true,
+                                icon: Icons.arrow_forward_ios_outlined,
+                                onPressed: () {
+                                  this._signIn();
+                                },
+                                iconColor: MyColors.textPrimaryColor,
+                                withShadow: false,
+                              ),
+                              ButtonTap(
+                                width: 0.7,
+                                text: "Sign In a Restaurant",
+                                textBold: true,
+                                icon: Icons.arrow_forward_ios_outlined,
+                                onPressed: () {
+                                  this._signInRestaurant();
+                                },
+                                iconColor: MyColors.textPrimaryColor,
+                                withShadow: false,
+                                fillColor: MyColors.darkPrimaryColor,
+                              ),
+                            ],
                           ),
                         ),
+
+                        // Center(
+                        //   child: ButtonTap(
+                        //     text: "Sign In",
+                        //     textBold: true,
+                        //     icon: Icons.arrow_forward_ios_outlined,
+                        //     onPressed: () {
+                        //       this._signIn();
+                        //     },
+                        //     iconColor: MyColors.textPrimaryColor,
+                        //     withShadow: false,
+                        //   ),
+                        // ),
                         // Row(
                         //   mainAxisAlignment: MainAxisAlignment.center,
                         //   children: [
