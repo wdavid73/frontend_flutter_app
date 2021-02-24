@@ -6,11 +6,12 @@ import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 class InputText extends StatelessWidget {
   final String label, hintText;
   final TextInputType type;
-  final bool obscureText, borderEnabled, formEnabled;
+  final bool obscureText, borderEnabled, formEnabled, isPasswordField;
   final double fontSize;
   final double width;
   final void Function(String text) onChanged;
   final String Function(String text) validator;
+  final void Function() showPassword;
 
   const InputText({
     Key key,
@@ -24,8 +25,9 @@ class InputText extends StatelessWidget {
     this.validator,
     this.hintText,
     @required this.width,
+    this.isPasswordField = false,
+    this.showPassword,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -37,7 +39,7 @@ class InputText extends StatelessWidget {
           maxLines: 1,
           enabled: this.formEnabled,
           keyboardType: this.type,
-          obscureText: this.obscureText,
+          obscureText: !this.obscureText,
           style: TextStyle(
             fontSize: this.fontSize,
             color: MyColors.primaryTextColor,
@@ -45,6 +47,16 @@ class InputText extends StatelessWidget {
           onChanged: this.onChanged,
           validator: this.validator,
           decoration: InputDecoration(
+            suffixIcon: this.isPasswordField
+                ? IconButton(
+                    icon: Icon(
+                      !this.obscureText
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                    ),
+                    onPressed: this.showPassword,
+                  )
+                : null,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide(
@@ -70,7 +82,7 @@ class InputText extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             labelStyle: TextStyle(
               color: Colors.black45,
-              //fontWeight: FontWeight.w500,
+//fontWeight: FontWeight.w500,
               fontSize: this.fontSize,
             ),
             hintText: this.hintText,

@@ -24,6 +24,7 @@ class _SigInFormState extends State<SigInForm> {
       _codeRestaurant;
   int _idPosition;
   bool isLoading = false, enableForm = false;
+  bool obscureText = true;
   RestClientServices _restClientServices = RestClientServices();
   List<Position> positions = [];
   GlobalKey<FormState> _formKeySignIn = GlobalKey();
@@ -129,6 +130,7 @@ class _SigInFormState extends State<SigInForm> {
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive(context);
     double inputWidth = responsive.width * 0.85;
+
     return Container(
       constraints: BoxConstraints(maxWidth: responsive.width),
       child: Form(
@@ -209,11 +211,18 @@ class _SigInFormState extends State<SigInForm> {
             ),
             InputText(
               formEnabled: enableForm,
+              isPasswordField: true,
               width: inputWidth,
               type: TextInputType.text,
               label: 'your password',
               fontSize: responsive.dp(2),
-              obscureText: true,
+              obscureText: !obscureText,
+              showPassword: () {
+                print("show or hide password");
+                setState(() {
+                  obscureText = !obscureText;
+                });
+              },
               onChanged: (text) {
                 _password = text;
               },
