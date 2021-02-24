@@ -36,6 +36,7 @@ class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
   @override
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive(context);
+    double inputWidth = responsive.width * 0.85;
     return Container(
       constraints: BoxConstraints(
         maxWidth: responsive.width,
@@ -49,6 +50,7 @@ class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
             Padding(
               padding: const EdgeInsets.all(2.5),
               child: InputText(
+                width: inputWidth,
                 type: TextInputType.text,
                 label: 'name of restaurant',
                 fontSize: responsive.dp(2),
@@ -64,6 +66,7 @@ class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
             Padding(
               padding: const EdgeInsets.all(2.5),
               child: InputText(
+                width: inputWidth,
                 type: TextInputType.text,
                 label: 'address of restaurant',
                 fontSize: responsive.dp(2),
@@ -79,6 +82,7 @@ class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
             Padding(
               padding: const EdgeInsets.all(2.5),
               child: InputText(
+                width: inputWidth,
                 type: TextInputType.phone,
                 label: 'phone of restaurant',
                 fontSize: responsive.dp(2),
@@ -94,6 +98,7 @@ class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
             Padding(
               padding: const EdgeInsets.all(2.5),
               child: InputText(
+                width: inputWidth,
                 type: TextInputType.phone,
                 label: 'cellphone of restaurant',
                 fontSize: responsive.dp(2),
@@ -107,20 +112,23 @@ class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              child: AnimatedButton(
-                text: "Register",
-                color: MyColors.accentColor,
-                icon: Icons.add_business_outlined,
-                width: responsive.width * 0.7,
-                buttonTextStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: responsive.dp(2),
-                  fontWeight: FontWeight.bold,
+              padding: const EdgeInsets.symmetric(vertical: 25),
+              child: Container(
+                height: responsive.height * 0.05,
+                child: AnimatedButton(
+                  text: "Register",
+                  color: MyColors.accentColor,
+                  icon: Icons.add_business_outlined,
+                  width: responsive.width * 0.8,
+                  buttonTextStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: responsive.dp(2),
+                    fontWeight: FontWeight.bold,
+                  ),
+                  pressEvent: () {
+                    this._submitRestaurant();
+                  },
                 ),
-                pressEvent: () {
-                  this._submitRestaurant();
-                },
               ),
             )
           ],

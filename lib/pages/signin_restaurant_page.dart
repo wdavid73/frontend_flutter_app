@@ -44,8 +44,12 @@ class _SignInRestaurantState extends State<SignInRestaurant> {
                 children: <Widget>[
                   Column(
                     children: <Widget>[
-                      IconContainer(
-                        size: responsive.dp(19),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 25),
+                        child: IconContainer(
+                          iconUrl: 'assets/icons/001-restaurant.svg',
+                          size: responsive.dp(19),
+                        ),
                       ),
                     ],
                   ),
@@ -56,7 +60,7 @@ class _SignInRestaurantState extends State<SignInRestaurant> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: responsive.height * 0.6,
+              height: responsive.height * 0.55,
               width: responsive.width,
               decoration: new BoxDecoration(
                 color: Colors.white,

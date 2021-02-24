@@ -46,8 +46,9 @@ class _SignInPageState extends State<SignInPage> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 3),
+                            horizontal: 50, vertical: 10),
                         child: IconContainer(
+                          iconUrl: 'assets/icons/014-customer_service.svg',
                           size: responsive.dp(12),
                         ),
                       )

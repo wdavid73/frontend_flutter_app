@@ -3,8 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class IconContainer extends StatelessWidget {
   final double size;
+  final String iconUrl;
 
-  const IconContainer({Key key, @required this.size})
+  const IconContainer({Key key, @required this.size, @required this.iconUrl})
       : assert(size != null && size > 0),
         super(key: key);
 
@@ -27,7 +28,8 @@ class IconContainer extends StatelessWidget {
       padding: EdgeInsets.all(this.size * 0.15),
       child: Center(
         child: SvgPicture.asset(
-          'assets/icon.svg',
+          //'assets/icon.svg',
+          this.iconUrl,
           width: this.size * 0.8,
           height: this.size * 0.8,
         ),

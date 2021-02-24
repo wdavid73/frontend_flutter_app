@@ -43,6 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       IconContainer(
+                        iconUrl: 'assets/icon.svg',
                         size: responsive.dp(15),
                       ),
                       Padding(

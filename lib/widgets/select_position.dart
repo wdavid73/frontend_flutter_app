@@ -20,9 +20,9 @@ class SelectPosition extends StatelessWidget {
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: Container(
-        width: responsive.width * 0.9,
+        width: responsive.width * 0.85,
         child: DropdownButtonFormField(
           hint: Text(
             "select a position".capitalizeEachWord(),
@@ -50,12 +50,11 @@ class SelectPosition extends StatelessWidget {
                 color: MyColors.dividerColor,
               ),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
           ),
           style: TextStyle(
             color: Colors.black45,
             fontSize: responsive.dp(2),
-            fontWeight: FontWeight.w500,
           ),
           itemHeight: responsive.height * 0.08,
           items: this.position.map((item) {
@@ -68,16 +67,12 @@ class SelectPosition extends StatelessWidget {
                 style: TextStyle(
                   color: MyColors.primaryTextColor,
                   fontSize: responsive.dp(2),
-                  fontWeight: FontWeight.bold,
                 ),
               ),
             );
           }).toList(),
           onChanged: this.onChanged,
           validator: this.validator,
-          // onChanged: (int idPosition) {
-          //   _idPosition = idPosition;
-          // },
         ),
       ),
     );

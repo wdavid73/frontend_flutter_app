@@ -45,7 +45,7 @@ class RestClientServices {
     try {
       final response = await http.post(base + path,
           headers: _headers, body: jsonEncode(data));
-      var body = jsonDecode(response.body);
+      //var body = jsonDecode(response.body);
       print("try ${response.statusCode}");
       if (response.statusCode == 201) {
         return _genericResponseFromJson(0, "", response.body);

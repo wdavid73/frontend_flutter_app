@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/class/Positions.dart';
 import 'package:my_restaurant_frontend_app/services/services.dart';
@@ -9,7 +8,6 @@ import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 import 'package:my_restaurant_frontend_app/widgets/input_text.dart';
 import 'package:my_restaurant_frontend_app/widgets/message_dialog.dart';
 import 'package:my_restaurant_frontend_app/widgets/select_position.dart';
-import 'package:my_restaurant_frontend_app/widgets/snack_bar_response_api.dart';
 
 class SigInForm extends StatefulWidget {
   @override
@@ -25,6 +23,7 @@ class _SigInFormState extends State<SigInForm> {
       _password,
       _codeRestaurant;
   int _idPosition;
+  bool isLoading = false, enableForm = false;
   RestClientServices _restClientServices = RestClientServices();
   List<Position> positions = [];
   GlobalKey<FormState> _formKeySignIn = GlobalKey();
@@ -46,12 +45,16 @@ class _SigInFormState extends State<SigInForm> {
         .then((value) {
       setState(() {
         positions = value.position;
+        enableForm = true;
       });
     });
   }
 
   _register() async {
     final isOk = _formKeySignIn.currentState.validate();
+    setState(() {
+      isLoading = true;
+    });
     if (isOk) {
       Map<String, dynamic> data = {
         "first_name": _firstName,
@@ -63,49 +66,69 @@ class _SigInFormState extends State<SigInForm> {
         "position_id": _idPosition,
         "restaurant_code": _codeRestaurant
       };
+      print(data);
+      await MessageDialog.dialogMessageSuccess(
+        context,
+        "register user".capitalizeEachWord(),
+        "the registration is successfully".capitalizeEachWord(),
+        "continue".capitalizeEachWord(),
+      ).then((value) {
+        _formKeySignIn.currentState.reset();
+        FocusScope.of(context).requestFocus(new FocusNode());
+        setState(() {
+          isLoading = false;
+        });
+      });
 
       //print(data);
-      await _restClientServices
-          .postUser2("api_admin/api_auth/register/", data)
-          .then((value) {
-        if (value.statusCode == 0) {
-          print("good");
-          MessageDialog.dialogMessageSuccess(
-            context,
-            "register user".capitalizeEachWord(),
-            "the registration is successfully".capitalizeEachWord(),
-            "continue".capitalizeEachWord(),
-          );
-          _formKeySignIn.currentState.reset();
-        } else {
-          try {
-            var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
-            snackBarResponseAPI(context, decodedJson);
-          } on FormatException catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "${value.message} - $e",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                backgroundColor: MyColors.darkPrimaryColor,
-                duration: Duration(seconds: 3),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        }
-      });
+      // await _restClientServices
+      //     .postUser2("api_admin/api_auth/register/", data)
+      //     .then((value) {
+      //   if (value.statusCode == 0) {
+      //     print("good");
+      //     MessageDialog.dialogMessageSuccess(
+      //       context,
+      //       "register user".capitalizeEachWord(),
+      //       "the registration is successfully".capitalizeEachWord(),
+      //       "continue".capitalizeEachWord(),
+      //     );
+      //     _formKeySignIn.currentState.reset();
+      //   } else {
+      //     try {
+      //       var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
+      //       snackBarResponseAPI(context, decodedJson);
+      //     } on FormatException catch (e) {
+      //       ScaffoldMessenger.of(context).showSnackBar(
+      //         SnackBar(
+      //           content: Text(
+      //             "${value.message} - $e",
+      //             style: TextStyle(
+      //               color: Colors.white,
+      //               fontWeight: FontWeight.bold,
+      //               fontSize: 16,
+      //             ),
+      //           ),
+      //           backgroundColor: MyColors.darkPrimaryColor,
+      //           duration: Duration(seconds: 3),
+      //           behavior: SnackBarBehavior.floating,
+      //         ),
+      //       );
+      //     }
+      //   }
+      //   setState(() {
+      //     isLoading = false;
+      //   });
+      // });
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive(context);
+    double inputWidth = responsive.width * 0.85;
     return Container(
       constraints: BoxConstraints(maxWidth: responsive.width),
       child: Form(
@@ -114,35 +137,46 @@ class _SigInFormState extends State<SigInForm> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            InputText(
-              type: TextInputType.text,
-              label: 'you first name',
-              fontSize: responsive.dp(2),
-              onChanged: (text) {
-                _firstName = text;
-              },
-              validator: (text) {
-                if (text.trim().length <= 0 || text.isEmpty) {
-                  return "invalid first name".capitalizeEachWord();
-                }
-                return null;
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InputText(
+                  formEnabled: enableForm,
+                  width: inputWidth / 2,
+                  type: TextInputType.text,
+                  label: 'you first name',
+                  fontSize: responsive.dp(2),
+                  onChanged: (text) {
+                    _firstName = text;
+                  },
+                  validator: (text) {
+                    if (text.trim().length <= 0 || text.isEmpty) {
+                      return "invalid first name".capitalizeEachWord();
+                    }
+                    return null;
+                  },
+                ),
+                InputText(
+                  formEnabled: enableForm,
+                  width: inputWidth / 2,
+                  type: TextInputType.text,
+                  label: 'you last name',
+                  fontSize: responsive.dp(2),
+                  onChanged: (text) {
+                    _lastName = text;
+                  },
+                  validator: (text) {
+                    if (text.trim().length <= 0 || text.isEmpty) {
+                      return "invalid last name".capitalizeEachWord();
+                    }
+                    return null;
+                  },
+                ),
+              ],
             ),
             InputText(
-              type: TextInputType.text,
-              label: 'you last name',
-              fontSize: responsive.dp(2),
-              onChanged: (text) {
-                _lastName = text;
-              },
-              validator: (text) {
-                if (text.trim().length <= 0 || text.isEmpty) {
-                  return "invalid last name".capitalizeEachWord();
-                }
-                return null;
-              },
-            ),
-            InputText(
+              formEnabled: enableForm,
+              width: inputWidth,
               type: TextInputType.text,
               label: 'your username',
               fontSize: responsive.dp(2),
@@ -157,6 +191,8 @@ class _SigInFormState extends State<SigInForm> {
               },
             ),
             InputText(
+              formEnabled: enableForm,
+              width: inputWidth,
               type: TextInputType.emailAddress,
               label: 'your email address',
               fontSize: responsive.dp(2),
@@ -164,13 +200,16 @@ class _SigInFormState extends State<SigInForm> {
                 _email = text;
               },
               validator: (text) {
-                if (text.trim().length <= 0 || text.isEmpty) {
+                if (text.trim().length <= 0 && text.isEmpty ||
+                    !text.isValidEmail()) {
                   return "invalid email".capitalizeEachWord();
                 }
                 return null;
               },
             ),
             InputText(
+              formEnabled: enableForm,
+              width: inputWidth,
               type: TextInputType.text,
               label: 'your password',
               fontSize: responsive.dp(2),
@@ -190,6 +229,8 @@ class _SigInFormState extends State<SigInForm> {
               },
             ),
             InputText(
+              formEnabled: enableForm,
+              width: inputWidth,
               type: TextInputType.phone,
               label: 'your phone',
               fontSize: responsive.dp(2),
@@ -204,6 +245,8 @@ class _SigInFormState extends State<SigInForm> {
               },
             ),
             InputText(
+              formEnabled: enableForm,
+              width: inputWidth,
               type: TextInputType.text,
               label: 'code of your restaurant',
               fontSize: responsive.dp(2),
@@ -223,9 +266,9 @@ class _SigInFormState extends State<SigInForm> {
                     child: Center(
                       child: Column(
                         children: [
-                          LinearProgressIndicator(
+                          RefreshProgressIndicator(
                             backgroundColor: MyColors.lightPrimaryColor,
-                            minHeight: responsive.height * 0.015,
+                            //minHeight: responsive.height * 0.015,
                           ),
                           Text(
                             "Loading Positions...",
@@ -242,6 +285,7 @@ class _SigInFormState extends State<SigInForm> {
                 : SelectPosition(
                     position: positions,
                     onChanged: (value) {
+                      FocusScope.of(context).requestFocus(new FocusNode());
                       _idPosition = value;
                     },
                     validator: (value) {
@@ -251,34 +295,27 @@ class _SigInFormState extends State<SigInForm> {
                       return null;
                     },
                   ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: FlatButton(
-                onPressed: () {
-                  this._register();
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                color: MyColors.accentColor,
-                child: SizedBox(
-                  height: responsive.height * 0.06,
-                  width: responsive.width * 0.7,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Center(
-                      child: Text(
-                        "Register",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: responsive.dp(2),
-                            fontWeight: FontWeight.bold),
+            !isLoading
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: AnimatedButton(
+                      text: "Register",
+                      color: MyColors.accentColor,
+                      icon: Icons.person_add,
+                      width: responsive.width * 0.8,
+                      buttonTextStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: responsive.dp(2),
+                        fontWeight: FontWeight.bold,
                       ),
+                      pressEvent: () {
+                        this._register();
+                      },
                     ),
-                  ),
-                ),
-              ),
-            )
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  )
           ],
         ),
       ),
