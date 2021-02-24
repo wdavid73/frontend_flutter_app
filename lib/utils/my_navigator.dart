@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:my_restaurant_frontend_app/pages/admin_page.dart';
+import 'package:my_restaurant_frontend_app/pages/chef_page.dart';
 import 'package:my_restaurant_frontend_app/pages/home_page.dart';
 import 'package:my_restaurant_frontend_app/pages/login_page.dart';
 import 'package:my_restaurant_frontend_app/pages/signin_page.dart';
 import 'package:my_restaurant_frontend_app/pages/signin_restaurant_page.dart';
+import 'package:my_restaurant_frontend_app/pages/waiter_page.dart';
 
 class MyNavigator {
   static void goToHome(BuildContext context) {
@@ -71,6 +74,69 @@ class MyNavigator {
       PageRouteBuilder(
         pageBuilder: (context, animation, anotherAnimation) {
           return SignInRestaurant();
+        },
+        transitionDuration: Duration(milliseconds: 500),
+        transitionsBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> anotherAnimation, Widget child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  static void goToAdminPage(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, anotherAnimation) {
+          return AdminPageHome();
+        },
+        transitionDuration: Duration(milliseconds: 500),
+        transitionsBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> anotherAnimation, Widget child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  static void goToWaiterPage(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, anotherAnimation) {
+          return WaiterPageHome();
+        },
+        transitionDuration: Duration(milliseconds: 500),
+        transitionsBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> anotherAnimation, Widget child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  static void goToChef(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, anotherAnimation) {
+          return ChefPageHome();
         },
         transitionDuration: Duration(milliseconds: 500),
         transitionsBuilder: (BuildContext context, Animation<double> animation,
