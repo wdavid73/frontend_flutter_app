@@ -35,3 +35,18 @@ extension emailValidator on String {
         .hasMatch(this);
   }
 }
+
+String verifySlash(String path) {
+  if (path.endsWith("/")) {
+    return path;
+  } else {
+    String newPath = path + "/";
+    return newPath;
+  }
+}
+
+extension stringEndSlash on String {
+  String endSlash() {
+    return verifySlash(this);
+  }
+}

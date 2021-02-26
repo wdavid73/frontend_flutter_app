@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:my_restaurant_frontend_app/services/services.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 import 'package:my_restaurant_frontend_app/widgets/input_text.dart';
 import 'package:my_restaurant_frontend_app/widgets/message_dialog.dart';
+import 'package:my_restaurant_frontend_app/widgets/snack_bar_response_api.dart';
 
 class SignInRestaurantForm extends StatefulWidget {
   @override
@@ -15,21 +19,56 @@ class SignInRestaurantForm extends StatefulWidget {
 
 class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
   GlobalKey<FormState> _formRestaurantKey = GlobalKey();
+  RestClientServices _restClientServices = RestClientServices();
+  String _name, _address, _phone, _cellphone;
+  final focusNode = FocusNode();
 
   _submitRestaurant() async {
     final isOk = _formRestaurantKey.currentState.validate();
     FocusScope.of(context).requestFocus(new FocusNode());
     if (isOk) {
-      print("register Restaurant");
-      var code = "123ABC2";
-      MessageDialog.dialogMessageSuccessRestaurant(
-        context,
-        code,
-        "success".capitalizeEachWord(),
-        "the code of your restaurant is :".capitalizeEachWord(),
-        "copy to clipboard".capitalizeEachWord(),
-      );
-      _formRestaurantKey.currentState.reset();
+      Map<String, dynamic> data = {
+        "name": _name,
+        "address": _address,
+        "phone": _phone,
+        "cellphone": _cellphone,
+      };
+      print(data);
+      await _restClientServices
+          .postWithoutSlash("api_admin/api_auth/restaurants", data)
+          .then((value) {
+        if (value.statusCode == 0) {
+          MessageDialog.dialogMessageSuccessRestaurant(
+            context,
+            jsonDecode(value.data)["code"].toString(),
+            "success".capitalizeEachWord(),
+            "the code of your restaurant is :".capitalizeEachWord(),
+            "copy to clipboard".capitalizeEachWord(),
+          );
+          _formRestaurantKey.currentState.reset();
+        } else {
+          try {
+            var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
+            snackBarResponseAPI(context, decodedJson);
+          } on FormatException catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "${value.message} - $e",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                backgroundColor: MyColors.darkPrimaryColor,
+                duration: Duration(seconds: 3),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        }
+      });
     }
   }
 
@@ -50,11 +89,15 @@ class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
             Padding(
               padding: const EdgeInsets.all(2.5),
               child: InputText(
+                formEnabled: true,
+                obscureText: true,
                 width: inputWidth,
                 type: TextInputType.text,
                 label: 'name of restaurant',
                 fontSize: responsive.dp(2),
-                onChanged: (text) {},
+                onChanged: (text) {
+                  _name = text;
+                },
                 validator: (text) {
                   if (text.trim().length <= 0 || text.isEmpty) {
                     return "invalid restaurant name".capitalizeEachWord();
@@ -66,11 +109,15 @@ class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
             Padding(
               padding: const EdgeInsets.all(2.5),
               child: InputText(
+                formEnabled: true,
+                obscureText: true,
                 width: inputWidth,
                 type: TextInputType.text,
                 label: 'address of restaurant',
                 fontSize: responsive.dp(2),
-                onChanged: (text) {},
+                onChanged: (text) {
+                  _address = text;
+                },
                 validator: (text) {
                   if (text.trim().length <= 0 || text.isEmpty) {
                     return "invalid address restaurant".capitalizeEachWord();
@@ -82,11 +129,15 @@ class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
             Padding(
               padding: const EdgeInsets.all(2.5),
               child: InputText(
+                formEnabled: true,
+                obscureText: true,
                 width: inputWidth,
                 type: TextInputType.phone,
                 label: 'phone of restaurant',
                 fontSize: responsive.dp(2),
-                onChanged: (text) {},
+                onChanged: (text) {
+                  _phone = text;
+                },
                 validator: (text) {
                   if (text.trim().length <= 0 || text.isEmpty) {
                     return "invalid phone".capitalizeEachWord();
@@ -98,11 +149,15 @@ class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
             Padding(
               padding: const EdgeInsets.all(2.5),
               child: InputText(
+                formEnabled: true,
+                obscureText: true,
                 width: inputWidth,
                 type: TextInputType.phone,
                 label: 'cellphone of restaurant',
                 fontSize: responsive.dp(2),
-                onChanged: (text) {},
+                onChanged: (text) {
+                  _cellphone = text;
+                },
                 validator: (text) {
                   if (text.trim().length <= 0 || text.isEmpty) {
                     return "invalid cellphone".capitalizeEachWord();

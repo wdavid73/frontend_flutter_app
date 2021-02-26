@@ -3,11 +3,12 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:my_restaurant_frontend_app/class/Positions.dart';
+import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 
 class RestClientServices {
   final _headers = {'Content-Type': 'application/json'};
-  //String base = "http://10.0.2.2:8000/";
-  String base = "https://my-resturant-api.herokuapp.com/";
+  String base = "http://10.0.2.2:8000/";
+  //String base = "https://my-resturant-api.herokuapp.com/";
 
   // GETS
 
@@ -40,10 +41,10 @@ class RestClientServices {
   }
 
   // POTS
-  Future<GenericResponse> postUser(
+  Future<GenericResponse> postGeneric(
       String path, Map<String, dynamic> data) async {
     try {
-      final response = await http.post(base + path,
+      final response = await http.post(base + path.endSlash(),
           headers: _headers, body: jsonEncode(data));
       //var body = jsonDecode(response.body);
       print("try ${response.statusCode}");
@@ -65,6 +66,69 @@ class RestClientServices {
       } else {
         print(e);
         print("error 2");
+        return _genericResponseFromJson(
+          1,
+          'Error interno. Contacte con los desarrolladores.',
+          null,
+        );
+      }
+    }
+  }
+
+  Future<GenericResponse> postUser(
+      String path, Map<String, dynamic> data) async {
+    try {
+      final response = await http.post(base + path.endSlash(),
+          headers: _headers, body: jsonEncode(data));
+      //var body = jsonDecode(response.body);
+      print("try ${response.statusCode}");
+      if (response.statusCode == 201) {
+        return _genericResponseFromJson(0, "", response.body);
+      } else {
+        return _genericResponseFromJson(1, response.body, null);
+      }
+    } catch (e) {
+      if (e.toString().contains("No route to host") ||
+          e.toString().contains("No address associated with hostname") ||
+          e.toString().contains("Connection refused") ||
+          e.toString().contains("Network is unreachable")) {
+        print("error 1");
+        return _genericResponseFromJson(
+            1,
+            "Consulte la conexión de datos o wifi de su dispositivo, no es posible conectarse con el servidor.",
+            null);
+      } else {
+        print(e);
+        print("error 2");
+        return _genericResponseFromJson(
+          1,
+          'Error interno. Contacte con los desarrolladores.',
+          null,
+        );
+      }
+    }
+  }
+
+  Future<GenericResponse> postWithoutSlash(
+      String path, Map<String, dynamic> data) async {
+    try {
+      final response = await http.post(base + path,
+          headers: _headers, body: jsonEncode(data));
+      if (response.statusCode == 201) {
+        return _genericResponseFromJson(0, "", response.body);
+      } else {
+        return _genericResponseFromJson(1, response.body, null);
+      }
+    } catch (e) {
+      if (e.toString().contains("No route to host") ||
+          e.toString().contains("No address associated with hostname") ||
+          e.toString().contains("Connection refused") ||
+          e.toString().contains("Network is unreachable")) {
+        return _genericResponseFromJson(
+            1,
+            "Consulte la conexión de datos o wifi de su dispositivo, no es posible conectarse con el servidor.",
+            null);
+      } else {
         return _genericResponseFromJson(
           1,
           'Error interno. Contacte con los desarrolladores.',

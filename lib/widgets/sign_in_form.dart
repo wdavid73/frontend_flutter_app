@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/class/Positions.dart';
@@ -8,6 +10,7 @@ import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 import 'package:my_restaurant_frontend_app/widgets/input_text.dart';
 import 'package:my_restaurant_frontend_app/widgets/message_dialog.dart';
 import 'package:my_restaurant_frontend_app/widgets/select_position.dart';
+import 'package:my_restaurant_frontend_app/widgets/snack_bar_response_api.dart';
 
 class SigInForm extends StatefulWidget {
   @override
@@ -67,59 +70,46 @@ class _SigInFormState extends State<SigInForm> {
         "position_id": _idPosition,
         "restaurant_code": _codeRestaurant
       };
-      print(data);
-      await MessageDialog.dialogMessageSuccess(
-        context,
-        "register user".capitalizeEachWord(),
-        "the registration is successfully".capitalizeEachWord(),
-        "continue".capitalizeEachWord(),
-      ).then((value) {
-        _formKeySignIn.currentState.reset();
-        FocusScope.of(context).requestFocus(new FocusNode());
-        setState(() {
-          isLoading = false;
-        });
-      });
-
       //print(data);
-      // await _restClientServices
-      //     .postUser2("api_admin/api_auth/register/", data)
-      //     .then((value) {
-      //   if (value.statusCode == 0) {
-      //     print("good");
-      //     MessageDialog.dialogMessageSuccess(
-      //       context,
-      //       "register user".capitalizeEachWord(),
-      //       "the registration is successfully".capitalizeEachWord(),
-      //       "continue".capitalizeEachWord(),
-      //     );
-      //     _formKeySignIn.currentState.reset();
-      //   } else {
-      //     try {
-      //       var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
-      //       snackBarResponseAPI(context, decodedJson);
-      //     } on FormatException catch (e) {
-      //       ScaffoldMessenger.of(context).showSnackBar(
-      //         SnackBar(
-      //           content: Text(
-      //             "${value.message} - $e",
-      //             style: TextStyle(
-      //               color: Colors.white,
-      //               fontWeight: FontWeight.bold,
-      //               fontSize: 16,
-      //             ),
-      //           ),
-      //           backgroundColor: MyColors.darkPrimaryColor,
-      //           duration: Duration(seconds: 3),
-      //           behavior: SnackBarBehavior.floating,
-      //         ),
-      //       );
-      //     }
-      //   }
-      //   setState(() {
-      //     isLoading = false;
-      //   });
-      // });
+      await _restClientServices
+          .postUser("api_admin/api_auth/register/", data)
+          .then((value) {
+        if (value.statusCode == 0) {
+          MessageDialog.dialogMessageSuccess(
+            context,
+            "register user".capitalizeEachWord(),
+            "the registration is successfully".capitalizeEachWord(),
+            "continue".capitalizeEachWord(),
+          ).then((value) {
+            _formKeySignIn.currentState.reset();
+            FocusScope.of(context).requestFocus(new FocusNode());
+            setState(() {
+              isLoading = false;
+            });
+          });
+        } else {
+          try {
+            var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
+            snackBarResponseAPI(context, decodedJson);
+          } on FormatException catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "${value.message} - $e",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                backgroundColor: MyColors.darkPrimaryColor,
+                duration: Duration(seconds: 3),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        }
+      });
     }
     setState(() {
       isLoading = false;
@@ -143,6 +133,7 @@ class _SigInFormState extends State<SigInForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InputText(
+                  obscureText: true,
                   formEnabled: enableForm,
                   width: inputWidth / 2,
                   type: TextInputType.text,
@@ -159,6 +150,7 @@ class _SigInFormState extends State<SigInForm> {
                   },
                 ),
                 InputText(
+                  obscureText: true,
                   formEnabled: enableForm,
                   width: inputWidth / 2,
                   type: TextInputType.text,
@@ -177,6 +169,7 @@ class _SigInFormState extends State<SigInForm> {
               ],
             ),
             InputText(
+              obscureText: true,
               formEnabled: enableForm,
               width: inputWidth,
               type: TextInputType.text,
@@ -193,6 +186,7 @@ class _SigInFormState extends State<SigInForm> {
               },
             ),
             InputText(
+              obscureText: true,
               formEnabled: enableForm,
               width: inputWidth,
               type: TextInputType.emailAddress,
@@ -238,6 +232,7 @@ class _SigInFormState extends State<SigInForm> {
               },
             ),
             InputText(
+              obscureText: true,
               formEnabled: enableForm,
               width: inputWidth,
               type: TextInputType.phone,
@@ -254,6 +249,7 @@ class _SigInFormState extends State<SigInForm> {
               },
             ),
             InputText(
+              obscureText: true,
               formEnabled: enableForm,
               width: inputWidth,
               type: TextInputType.text,
