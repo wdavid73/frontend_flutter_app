@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -12,12 +13,12 @@ import 'package:my_restaurant_frontend_app/widgets/message_dialog.dart';
 import 'package:my_restaurant_frontend_app/widgets/select_position.dart';
 import 'package:my_restaurant_frontend_app/widgets/snack_bar_response_api.dart';
 
-class SigInForm extends StatefulWidget {
+class RegisterUserForm extends StatefulWidget {
   @override
-  _SigInFormState createState() => _SigInFormState();
+  _RegisterUserFormState createState() => _RegisterUserFormState();
 }
 
-class _SigInFormState extends State<SigInForm> {
+class _RegisterUserFormState extends State<RegisterUserForm> {
   String _firstName,
       _lastName,
       _username,
@@ -25,7 +26,8 @@ class _SigInFormState extends State<SigInForm> {
       _phone,
       _password,
       _codeRestaurant;
-  int _idPosition;
+  Timer _timer;
+  int _idPosition, _start = 10;
   bool isLoading = false, enableForm = false;
   bool obscureText = true;
   RestClientServices _restClientServices = RestClientServices();
@@ -43,14 +45,38 @@ class _SigInFormState extends State<SigInForm> {
     super.initState();
   }
 
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(oneSec, (Timer timer) {
+      if (_start == 0) {
+        setState(() {
+          timer.cancel();
+        });
+        MessageDialog.dialogMessageWarning(
+          context,
+          "Warning",
+          "Please check your internet connection or contact support.",
+          "Continue",
+        );
+      } else {
+        setState(() {
+          _start--;
+        });
+      }
+    });
+  }
+
   Future<void> _getPositions() async {
     await _restClientServices
         .getPositions("api_admin/api_auth/positions")
         .then((value) {
+      print(value.position);
       setState(() {
-        positions = value.position;
+        positions = value.position != null ? value.position : [];
         enableForm = true;
       });
+      // ignore: unnecessary_statements
+      positions.length <= 0 ? startTimer() : null;
     });
   }
 
@@ -92,21 +118,21 @@ class _SigInFormState extends State<SigInForm> {
             var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
             snackBarResponseAPI(context, decodedJson);
           } on FormatException catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "${value.message} - $e",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                backgroundColor: MyColors.darkPrimaryColor,
-                duration: Duration(seconds: 3),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     content: Text(
+            //       "${value.message} - $e",
+            //       style: TextStyle(
+            //         color: Colors.white,
+            //         fontWeight: FontWeight.bold,
+            //         fontSize: 16,
+            //       ),
+            //     ),
+            //     backgroundColor: MyColors.darkPrimaryColor,
+            //     duration: Duration(seconds: 3),
+            //     behavior: SnackBarBehavior.floating,
+            //   ),
+            // );
           }
         }
       });
@@ -114,6 +140,12 @@ class _SigInFormState extends State<SigInForm> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -265,7 +297,7 @@ class _SigInFormState extends State<SigInForm> {
                 return null;
               },
             ),
-            (positions.length == 0)
+            (positions.length == 0 || positions.length == null)
                 ? Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Center(

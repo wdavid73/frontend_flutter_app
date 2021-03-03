@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 
 class ContentDialogMessage extends StatelessWidget {
@@ -44,20 +43,20 @@ class ContentDialogMessage extends StatelessWidget {
                 Clipboard.setData(
                   new ClipboardData(text: code),
                 );
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      "Code Copied!",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: responsive.dp(2),
-                      ),
-                    ),
-                    backgroundColor: MyColors.darkPrimaryColor,
-                    duration: Duration(seconds: 3),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   SnackBar(
+                //     content: Text(
+                //       "Code Copied!",
+                //       style: TextStyle(
+                //         color: Colors.white,
+                //         fontSize: responsive.dp(2),
+                //       ),
+                //     ),
+                //     backgroundColor: MyColors.darkPrimaryColor,
+                //     duration: Duration(seconds: 3),
+                //     behavior: SnackBarBehavior.floating,
+                //   ),
+                // );
                 Navigator.of(context).pop();
               },
               child: Text(

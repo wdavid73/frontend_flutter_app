@@ -10,7 +10,17 @@ class _ChefPageHomeState extends State<ChefPageHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Text("chef page home"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text("chef page home"),
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("back"),
+            )
+          ],
+        ),
       ),
     );
   }

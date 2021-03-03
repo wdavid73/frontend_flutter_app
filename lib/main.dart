@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/routes.dart';
 
-import 'pages/splash_screen.dart';
+import 'pages/home/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

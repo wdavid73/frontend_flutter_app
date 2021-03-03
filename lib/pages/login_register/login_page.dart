@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/widgets/icon_container.dart';
-import 'package:my_restaurant_frontend_app/widgets/log_in_form.dart';
 import 'package:my_restaurant_frontend_app/widgets/screen_session.dart';
+
+import 'file:///D:/Devs/MyRestaurantApp/frontend/my_restaurant_frontend_app/lib/widgets/forms/log_in_form.dart';
 
 class LoginPage extends StatefulWidget {
   @override

@@ -12,20 +12,24 @@ import 'package:my_restaurant_frontend_app/widgets/input_text.dart';
 import 'package:my_restaurant_frontend_app/widgets/message_dialog.dart';
 import 'package:my_restaurant_frontend_app/widgets/snack_bar_response_api.dart';
 
-class SignInRestaurantForm extends StatefulWidget {
+class RegisterRestaurantForm extends StatefulWidget {
   @override
-  _SignInRestaurantFormState createState() => _SignInRestaurantFormState();
+  _RegisterRestaurantFormState createState() => _RegisterRestaurantFormState();
 }
 
-class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
+class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
   GlobalKey<FormState> _formRestaurantKey = GlobalKey();
   RestClientServices _restClientServices = RestClientServices();
   String _name, _address, _phone, _cellphone;
+  bool isLoading = false;
   final focusNode = FocusNode();
 
   _submitRestaurant() async {
     final isOk = _formRestaurantKey.currentState.validate();
     FocusScope.of(context).requestFocus(new FocusNode());
+    setState(() {
+      isLoading = true;
+    });
     if (isOk) {
       Map<String, dynamic> data = {
         "name": _name,
@@ -51,25 +55,28 @@ class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
             var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
             snackBarResponseAPI(context, decodedJson);
           } on FormatException catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "${value.message} - $e",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                backgroundColor: MyColors.darkPrimaryColor,
-                duration: Duration(seconds: 3),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     content: Text(
+            //       "${value.message} - $e",
+            //       style: TextStyle(
+            //         color: Colors.white,
+            //         fontWeight: FontWeight.bold,
+            //         fontSize: 16,
+            //       ),
+            //     ),
+            //     backgroundColor: MyColors.darkPrimaryColor,
+            //     duration: Duration(seconds: 3),
+            //     behavior: SnackBarBehavior.floating,
+            //   ),
+            // );
           }
         }
       });
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -166,26 +173,30 @@ class _SignInRestaurantFormState extends State<SignInRestaurantForm> {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25),
-              child: Container(
-                height: responsive.height * 0.05,
-                child: AnimatedButton(
-                  text: "Register",
-                  color: MyColors.accentColor,
-                  icon: Icons.add_business_outlined,
-                  width: responsive.width * 0.8,
-                  buttonTextStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: responsive.dp(2),
-                    fontWeight: FontWeight.bold,
+            !isLoading
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 25),
+                    child: Container(
+                      height: responsive.height * 0.05,
+                      child: AnimatedButton(
+                        text: "Register",
+                        color: MyColors.accentColor,
+                        icon: Icons.add_business_outlined,
+                        width: responsive.width * 0.8,
+                        buttonTextStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: responsive.dp(2),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        pressEvent: () {
+                          this._submitRestaurant();
+                        },
+                      ),
+                    ),
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
                   ),
-                  pressEvent: () {
-                    this._submitRestaurant();
-                  },
-                ),
-              ),
-            )
           ],
         ),
       ),

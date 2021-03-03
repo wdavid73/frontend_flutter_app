@@ -7,14 +7,19 @@ import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 
 class RestClientServices {
   final _headers = {'Content-Type': 'application/json'};
+  final _headersAuthorization = {'Authorization': 'Token '};
   String base = "http://10.0.2.2:8000/";
+  //String base = "http://localhost:8000/";
   //String base = "https://my-resturant-api.herokuapp.com/";
 
   // GETS
 
   Future<PositionResponse> getPositions(String path) async {
     try {
-      final response = await http.get(base + path, headers: _headers);
+      final response = await http.get(
+        base + path,
+        headers: _headers,
+      );
       if (response.statusCode == 200) {
         return PositionResponse.fromJson(jsonDecode(response.body), 0, "");
       } else {
@@ -40,15 +45,14 @@ class RestClientServices {
     }
   }
 
-  // POTS
-  Future<GenericResponse> postGeneric(
-      String path, Map<String, dynamic> data) async {
+  Future<GenericResponse> getAuthorization(String path,
+      [String token = ""]) async {
     try {
-      final response = await http.post(base + path.endSlash(),
-          headers: _headers, body: jsonEncode(data));
-      //var body = jsonDecode(response.body);
-      print("try ${response.statusCode}");
-      if (response.statusCode == 201) {
+      _headersAuthorization["Authorization"] = "Token $token";
+      final response =
+          await http.get(base + path, headers: _headersAuthorization);
+
+      if (response.statusCode == 200) {
         return _genericResponseFromJson(0, "", response.body);
       } else {
         return _genericResponseFromJson(1, response.body, null);
@@ -64,7 +68,72 @@ class RestClientServices {
             "Consulte la conexión de datos o wifi de su dispositivo, no es posible conectarse con el servidor.",
             null);
       } else {
-        print(e);
+        print("error 2 :  $e");
+        return _genericResponseFromJson(
+          1,
+          'Error interno. Contacte con los desarrolladores.',
+          null,
+        );
+      }
+    }
+  }
+
+  Future<GenericResponse> get(String path) async {
+    try {
+      final response = await http.get(base + path, headers: _headers);
+      if (response.statusCode == 200) {
+        return _genericResponseFromJson(0, "", response.body);
+      } else {
+        return _genericResponseFromJson(1, response.body, null);
+      }
+    } catch (e) {
+      if (e.toString().contains("No route to host") ||
+          e.toString().contains("No address associated with hostname") ||
+          e.toString().contains("Connection refused") ||
+          e.toString().contains("Network is unreachable")) {
+        print("error 1");
+        return _genericResponseFromJson(
+            1,
+            "Consulte la conexión de datos o wifi de su dispositivo, no es posible conectarse con el servidor.",
+            null);
+      } else {
+        print("error 2 :  $e");
+        return _genericResponseFromJson(
+          1,
+          'Error interno. Contacte con los desarrolladores.',
+          null,
+        );
+      }
+    }
+  }
+
+  // POTS
+  Future<GenericResponse> postGeneric(
+      String path, Map<String, dynamic> data) async {
+    try {
+      final response = await http.post(
+        base + path.endSlash(),
+        headers: _headers,
+        body: jsonEncode(data),
+      );
+      //var body = jsonDecode(response.body);
+      print("try ${response.statusCode}");
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return _genericResponseFromJson(0, "", response.body);
+      } else {
+        return _genericResponseFromJson(1, response.body, null);
+      }
+    } catch (e) {
+      if (e.toString().contains("No route to host") ||
+          e.toString().contains("No address associated with hostname") ||
+          e.toString().contains("Connection refused") ||
+          e.toString().contains("Network is unreachable")) {
+        print("error 1");
+        return _genericResponseFromJson(
+            1,
+            "Consulte la conexión de datos o wifi de su dispositivo, no es posible conectarse con el servidor.",
+            null);
+      } else {
         print("error 2");
         return _genericResponseFromJson(
           1,
@@ -78,8 +147,11 @@ class RestClientServices {
   Future<GenericResponse> postUser(
       String path, Map<String, dynamic> data) async {
     try {
-      final response = await http.post(base + path.endSlash(),
-          headers: _headers, body: jsonEncode(data));
+      final response = await http.post(
+        base + path.endSlash(),
+        headers: _headers,
+        body: jsonEncode(data),
+      );
       //var body = jsonDecode(response.body);
       print("try ${response.statusCode}");
       if (response.statusCode == 201) {
@@ -112,8 +184,11 @@ class RestClientServices {
   Future<GenericResponse> postWithoutSlash(
       String path, Map<String, dynamic> data) async {
     try {
-      final response = await http.post(base + path,
-          headers: _headers, body: jsonEncode(data));
+      final response = await http.post(
+        base + path,
+        headers: _headers,
+        body: jsonEncode(data),
+      );
       if (response.statusCode == 201) {
         return _genericResponseFromJson(0, "", response.body);
       } else {
