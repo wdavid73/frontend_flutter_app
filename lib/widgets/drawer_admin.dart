@@ -1,0 +1,226 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
+import 'package:my_restaurant_frontend_app/services/services.dart';
+import 'package:my_restaurant_frontend_app/utils/clearSession.dart';
+import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
+import 'package:my_restaurant_frontend_app/utils/my_navigator.dart';
+import 'package:my_restaurant_frontend_app/widgets/my_snack_bar.dart';
+import 'package:my_restaurant_frontend_app/widgets/userAccountHeader.dart';
+import 'package:ots/ots.dart';
+
+class DrawerAdmin extends StatefulWidget {
+  @override
+  _DrawerAdminState createState() => _DrawerAdminState();
+}
+
+class _DrawerAdminState extends State<DrawerAdmin> {
+  String _name, _email, _username;
+  var _session = FlutterSession();
+  int _selectedDestination = 0;
+  RestClientServices _restClientServices = RestClientServices();
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
+  void _init() {
+    this._getUserInfo();
+    super.initState();
+  }
+
+  Future<void> _getUserInfo() async {
+    dynamic name = await _session.get("name");
+    dynamic email = await _session.get("email");
+    dynamic username = await _session.get("username");
+
+    setState(() {
+      _name = name;
+      _email = email;
+      _username = username;
+    });
+  }
+
+  _logout() async {
+    dynamic token = await _session.get("token");
+    showLoader(isModal: true);
+    await _restClientServices
+        .logout("dj-rest-auth/logout/", token)
+        .then((response) {
+      if (response.statusCode == 0) {
+        clearSession();
+        MyNavigator.goToHome(context);
+      } else {
+        mySnackBar(
+          context,
+          response.message.toString(),
+        );
+      }
+    });
+    hideLoader();
+  }
+
+  void selectDestination(int index) {
+    setState(() {
+      _selectedDestination = index;
+    });
+    if (index == 0) {
+      print("home");
+    }
+    if (index == 1) {
+      print("register waiter");
+    }
+    if (index == 2) {
+      print("register chef");
+    }
+    if (index == 3) {
+      print("register admin");
+    }
+    if (index == 4) {
+      print("register dish");
+    }
+    if (index == 5) {
+      print("logout");
+      _logout();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Container(
+        color: Colors.black87,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            UserAccountHeader(name: this._name, email: this._email),
+            Divider(
+              color: MyColors.dividerColor,
+              height: 1,
+              thickness: 1,
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.home,
+                color: _selectedDestination == 0
+                    ? Colors.pinkAccent
+                    : Colors.white,
+              ),
+              title: Text(
+                'Home',
+                style: TextStyle(
+                  color: _selectedDestination == 0
+                      ? Colors.pinkAccent
+                      : Colors.white,
+                ),
+              ),
+              selected: _selectedDestination == 0,
+              onTap: () => selectDestination(0),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.person_add,
+                color: _selectedDestination == 1
+                    ? Colors.pinkAccent
+                    : Colors.white,
+              ),
+              title: Text(
+                'Register Waiter',
+                style: TextStyle(
+                  color: _selectedDestination == 1
+                      ? Colors.pinkAccent
+                      : Colors.white,
+                ),
+              ),
+              selected: _selectedDestination == 1,
+              onTap: () => selectDestination(1),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.person_add_alt_1,
+                color: _selectedDestination == 2
+                    ? Colors.pinkAccent
+                    : Colors.white,
+              ),
+              title: Text(
+                'Register Chef',
+                style: TextStyle(
+                  color: _selectedDestination == 2
+                      ? Colors.pinkAccent
+                      : Colors.white,
+                ),
+              ),
+              selected: _selectedDestination == 2,
+              onTap: () => selectDestination(2),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.person_add_alt_1_outlined,
+                color: _selectedDestination == 3
+                    ? Colors.pinkAccent
+                    : Colors.white,
+              ),
+              title: Text(
+                'Register Admin',
+                style: TextStyle(
+                  color: _selectedDestination == 3
+                      ? Colors.pinkAccent
+                      : Colors.white,
+                ),
+              ),
+              selected: _selectedDestination == 3,
+              onTap: () => selectDestination(3),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.add_sharp,
+                color: _selectedDestination == 4
+                    ? Colors.pinkAccent
+                    : Colors.white,
+              ),
+              title: Text(
+                'Register Dish',
+                style: TextStyle(
+                  color: _selectedDestination == 4
+                      ? Colors.pinkAccent
+                      : Colors.white,
+                ),
+              ),
+              selected: _selectedDestination == 4,
+              onTap: () => selectDestination(4),
+            ),
+            Divider(
+              color: MyColors.dividerColor,
+              height: 1,
+              thickness: 1,
+            ),
+            Container(
+              child: Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.logout,
+                    color: _selectedDestination == 5
+                        ? Colors.pinkAccent
+                        : Colors.white,
+                  ),
+                  title: Text(
+                    'Logout',
+                    style: TextStyle(
+                      color: _selectedDestination == 5
+                          ? Colors.pinkAccent
+                          : Colors.white,
+                    ),
+                  ),
+                  selected: _selectedDestination == 5,
+                  onTap: () => selectDestination(5),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

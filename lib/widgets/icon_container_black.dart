@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class IconContainer extends StatelessWidget {
+class IconContainerBlack extends StatelessWidget {
   final double size;
   final String iconUrl;
 
-  const IconContainer({
+  const IconContainerBlack({
     Key key,
     @required this.size,
     @required this.iconUrl,
@@ -18,7 +18,7 @@ class IconContainer extends StatelessWidget {
       width: this.size,
       height: this.size,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(this.size * 0.15),
         boxShadow: [
           BoxShadow(

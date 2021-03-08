@@ -10,7 +10,10 @@ import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/my_navigator.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
+import 'package:my_restaurant_frontend_app/utils/unFocusForm.dart';
 import 'package:my_restaurant_frontend_app/widgets/input_text.dart';
+import 'package:my_restaurant_frontend_app/widgets/my_snack_bar.dart';
+import 'package:ots/ots.dart';
 
 class LogInForm extends StatefulWidget {
   @override
@@ -24,23 +27,17 @@ class _LogInFormState extends State<LogInForm> {
   RestClientServices _restClientServices = RestClientServices();
   GlobalKey<FormState> _formKeyLogIn = GlobalKey();
 
-  _logout() async {
-    dynamic token = await _session.get("token");
-    await _restClientServices
-        .postGeneric("dj-rest-auth/logout/", token)
-        .then((value) {
-      print(value.statusCode);
-    });
-  }
-
   _getUserId(dynamic token) async {
     String userId;
     await _restClientServices
-        .getAuthorization("dj-rest-auth/user", token)
+        .getAuthorization("dj-rest-auth/user/".endSlash(), token)
         .then((response) {
       if (response.statusCode == 0) {
         dynamic json = jsonDecode(response.data);
         User user = User.fromJson(json);
+        _session.set("name", user.firstName + " " + user.lastName);
+        _session.set("username", user.username);
+        _session.set("email", user.email);
         userId = user.pk.toString();
       }
     });
@@ -52,7 +49,7 @@ class _LogInFormState extends State<LogInForm> {
     String positionName;
     await _restClientServices
         .getAuthorization(
-            "api_admin/api_auth/positions/by_user/$userId/", token)
+            "api_admin/api_auth/positions/by_user/$userId/".endSlash(), token)
         .then((response) {
       if (response.statusCode == 0) {
         dynamic json = jsonDecode(response.data);
@@ -66,52 +63,42 @@ class _LogInFormState extends State<LogInForm> {
   _login() async {
     final isOk = _formKeyLogIn.currentState.validate();
     if (isOk) {
+      _formKeyLogIn.currentState.reset();
+      unFocusForm(context);
+      showLoader(isModal: true);
       Map<String, dynamic> myData = {
         "username": _username,
         "password": _password,
       };
       // print(data);
       await _restClientServices
-          .postGeneric("dj-rest-auth/login", myData)
+          .postGeneric("dj-rest-auth/login/".endSlash(), myData)
           .then((response) async {
         if (response.statusCode == 0) {
           dynamic token = jsonDecode(response.data)["key"];
+
           _session.set("token", token);
           String userId = await this._getUserId(token);
           String positionName = await this._getPositionByUser(userId);
-          print(positionName);
           positionName == "Admin"
               ? MyNavigator.goToAdminPage(context)
               : positionName == "Chef"
                   ? MyNavigator.goToChefPage(context)
                   : positionName == "Waiter"
                       ? MyNavigator.goToWaiterPage(context)
-                      : null;
-
-          //print(userId.then((value) => print(value)));
-          //this._getPositionByUser(user);
-
-          //dynamic token = await FlutterSession().get("token");
-
-          /*
-          * # ROUTE MAP OF LOGIN
-# 1. api_admin/api_auth/register (POST)
-# 2. dj-rest-auth/login (POST)
-# 3. dj-rest-auth/user (GET)
-# 4. api_admin/positions/by_user (GET)
-* */
+                      : mySnackBar(
+                          context,
+                          "Porfavor registre su usuario correctamente o contacte con soporte",
+                        );
         } else {
+          mySnackBar(
+            context,
+            response.message.toString(),
+          );
           print("!!error");
-          // print(value.statusCode);
-          // print(value.message);
-          // print(value.data);
         }
       });
-      /*
-      el request devuelve informacion como el tipo de usuario.
-      dependiendo del tipo de usuario ira a admin_page , chef_page o waiter_page
-      * */
-      //MyNavigator.goToAdminPage(context);
+      hideLoader();
     }
   }
 
@@ -183,22 +170,6 @@ class _LogInFormState extends State<LogInForm> {
                     fontWeight: FontWeight.bold),
                 pressEvent: () {
                   this._login();
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: AnimatedButton(
-                text: "Log out Temp",
-                color: MyColors.accentColor,
-                icon: Icons.logout,
-                width: responsive.width * 0.8,
-                buttonTextStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: responsive.dp(2),
-                    fontWeight: FontWeight.bold),
-                pressEvent: () {
-                  this._logout();
                 },
               ),
             ),

@@ -10,6 +10,7 @@ import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 import 'package:my_restaurant_frontend_app/widgets/input_text.dart';
 import 'package:my_restaurant_frontend_app/widgets/message_dialog.dart';
+import 'package:my_restaurant_frontend_app/widgets/my_snack_bar.dart';
 import 'package:my_restaurant_frontend_app/widgets/snack_bar_response_api.dart';
 
 class RegisterRestaurantForm extends StatefulWidget {
@@ -55,21 +56,7 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
             var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
             snackBarResponseAPI(context, decodedJson);
           } on FormatException catch (e) {
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   SnackBar(
-            //     content: Text(
-            //       "${value.message} - $e",
-            //       style: TextStyle(
-            //         color: Colors.white,
-            //         fontWeight: FontWeight.bold,
-            //         fontSize: 16,
-            //       ),
-            //     ),
-            //     backgroundColor: MyColors.darkPrimaryColor,
-            //     duration: Duration(seconds: 3),
-            //     behavior: SnackBarBehavior.floating,
-            //   ),
-            // );
+            mySnackBar(context, value.message);
           }
         }
       });

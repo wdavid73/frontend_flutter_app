@@ -7,24 +7,36 @@ import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 
 class RestClientServices {
   final _headers = {'Content-Type': 'application/json'};
-  final _headersAuthorization = {'Authorization': 'Token '};
+  final _headersAuthorization = {
+    'Authorization': 'Token ',
+    'Content-Type': 'application/json',
+  };
   String base = "http://10.0.2.2:8000/";
-  //String base = "http://localhost:8000/";
+  int durationTimeOut = 10;
   //String base = "https://my-resturant-api.herokuapp.com/";
 
   // GETS
-
   Future<PositionResponse> getPositions(String path) async {
     try {
-      final response = await http.get(
-        base + path,
-        headers: _headers,
-      );
+      final response = await http
+          .get(
+            base + path,
+            headers: _headers,
+          )
+          .timeout(
+            Duration(seconds: durationTimeOut),
+          );
       if (response.statusCode == 200) {
         return PositionResponse.fromJson(jsonDecode(response.body), 0, "");
       } else {
         return PositionResponse.fromJson(null, 1, response.body);
       }
+    } on TimeoutException catch (_) {
+      return PositionResponse.fromJson(
+        null,
+        1,
+        'The connection has timed out, Please try again!',
+      );
     } catch (e) {
       if (e.toString().contains("No route to host") ||
           e.toString().contains("No address associated with hostname") ||
@@ -33,30 +45,41 @@ class RestClientServices {
         return PositionResponse.fromJson(
           null,
           1,
-          "Consulte la conexión de datos o wifi de su dispositivo, no es posible conectarse con el servidor",
+          "Check your device's data or Wi-Fi connection.",
         );
       } else {
         return PositionResponse.fromJson(
           null,
           1,
-          "Error interno. Contacte con los desarrolladores.",
+          'Internal error. Contact support.',
         );
       }
     }
   }
 
-  Future<GenericResponse> getAuthorization(String path,
-      [String token = ""]) async {
+  Future<GenericResponse> getAuthorization(String path, String token) async {
     try {
       _headersAuthorization["Authorization"] = "Token $token";
-      final response =
-          await http.get(base + path, headers: _headersAuthorization);
+      final response = await http
+          .get(
+            base + path,
+            headers: _headersAuthorization,
+          )
+          .timeout(
+            Duration(seconds: durationTimeOut),
+          );
 
       if (response.statusCode == 200) {
         return _genericResponseFromJson(0, "", response.body);
       } else {
         return _genericResponseFromJson(1, response.body, null);
       }
+    } on TimeoutException catch (_) {
+      return _genericResponseFromJson(
+        1,
+        'The connection has timed out, Please try again!',
+        null,
+      );
     } catch (e) {
       if (e.toString().contains("No route to host") ||
           e.toString().contains("No address associated with hostname") ||
@@ -64,14 +87,15 @@ class RestClientServices {
           e.toString().contains("Network is unreachable")) {
         print("error 1");
         return _genericResponseFromJson(
-            1,
-            "Consulte la conexión de datos o wifi de su dispositivo, no es posible conectarse con el servidor.",
-            null);
+          1,
+          "Check your device's data or Wi-Fi connection.",
+          null,
+        );
       } else {
         print("error 2 :  $e");
         return _genericResponseFromJson(
           1,
-          'Error interno. Contacte con los desarrolladores.',
+          'Internal error. Contact support.',
           null,
         );
       }
@@ -80,12 +104,25 @@ class RestClientServices {
 
   Future<GenericResponse> get(String path) async {
     try {
-      final response = await http.get(base + path, headers: _headers);
+      final response = await http
+          .get(
+            base + path,
+            headers: _headers,
+          )
+          .timeout(
+            Duration(seconds: durationTimeOut),
+          );
       if (response.statusCode == 200) {
         return _genericResponseFromJson(0, "", response.body);
       } else {
         return _genericResponseFromJson(1, response.body, null);
       }
+    } on TimeoutException catch (_) {
+      return _genericResponseFromJson(
+        1,
+        'The connection has timed out, Please try again!',
+        null,
+      );
     } catch (e) {
       if (e.toString().contains("No route to host") ||
           e.toString().contains("No address associated with hostname") ||
@@ -93,14 +130,15 @@ class RestClientServices {
           e.toString().contains("Network is unreachable")) {
         print("error 1");
         return _genericResponseFromJson(
-            1,
-            "Consulte la conexión de datos o wifi de su dispositivo, no es posible conectarse con el servidor.",
-            null);
+          1,
+          "Check your device's data or Wi-Fi connection.",
+          null,
+        );
       } else {
         print("error 2 :  $e");
         return _genericResponseFromJson(
           1,
-          'Error interno. Contacte con los desarrolladores.',
+          'Internal error. Contact support.',
           null,
         );
       }
@@ -111,70 +149,41 @@ class RestClientServices {
   Future<GenericResponse> postGeneric(
       String path, Map<String, dynamic> data) async {
     try {
-      final response = await http.post(
-        base + path.endSlash(),
-        headers: _headers,
-        body: jsonEncode(data),
-      );
-      //var body = jsonDecode(response.body);
+      final response = await http
+          .post(
+            base + path,
+            headers: _headers,
+            body: jsonEncode(data),
+          )
+          .timeout(
+            Duration(seconds: 5),
+          );
       print("try ${response.statusCode}");
       if (response.statusCode == 201 || response.statusCode == 200) {
         return _genericResponseFromJson(0, "", response.body);
       } else {
         return _genericResponseFromJson(1, response.body, null);
       }
+    } on TimeoutException catch (_) {
+      return _genericResponseFromJson(
+        1,
+        'The connection has timed out, Please try again!',
+        null,
+      );
     } catch (e) {
       if (e.toString().contains("No route to host") ||
           e.toString().contains("No address associated with hostname") ||
           e.toString().contains("Connection refused") ||
           e.toString().contains("Network is unreachable")) {
-        print("error 1");
-        return _genericResponseFromJson(
-            1,
-            "Consulte la conexión de datos o wifi de su dispositivo, no es posible conectarse con el servidor.",
-            null);
-      } else {
-        print("error 2");
         return _genericResponseFromJson(
           1,
-          'Error interno. Contacte con los desarrolladores.',
+          "Check your device's data or Wi-Fi connection.",
           null,
         );
-      }
-    }
-  }
-
-  Future<GenericResponse> postUser(
-      String path, Map<String, dynamic> data) async {
-    try {
-      final response = await http.post(
-        base + path.endSlash(),
-        headers: _headers,
-        body: jsonEncode(data),
-      );
-      //var body = jsonDecode(response.body);
-      print("try ${response.statusCode}");
-      if (response.statusCode == 201) {
-        return _genericResponseFromJson(0, "", response.body);
       } else {
-        return _genericResponseFromJson(1, response.body, null);
-      }
-    } catch (e) {
-      if (e.toString().contains("No route to host") ||
-          e.toString().contains("No address associated with hostname") ||
-          e.toString().contains("Connection refused") ||
-          e.toString().contains("Network is unreachable")) {
-        print("error 1");
-        return _genericResponseFromJson(
-            1,
-            "Consulte la conexión de datos o wifi de su dispositivo, no es posible conectarse con el servidor.",
-            null);
-      } else {
-        print(e);
-        print("error 2");
         return _genericResponseFromJson(
           1,
-          'Error interno. Contacte con los desarrolladores.',
+          'Internal error. Contact support.',
           null,
         );
       }
@@ -184,47 +193,89 @@ class RestClientServices {
   Future<GenericResponse> postWithoutSlash(
       String path, Map<String, dynamic> data) async {
     try {
-      final response = await http.post(
-        base + path,
-        headers: _headers,
-        body: jsonEncode(data),
-      );
+      final response = await http
+          .post(
+            base + path,
+            headers: _headers,
+            body: jsonEncode(data),
+          )
+          .timeout(
+            Duration(seconds: durationTimeOut),
+          );
       if (response.statusCode == 201) {
         return _genericResponseFromJson(0, "", response.body);
       } else {
         return _genericResponseFromJson(1, response.body, null);
       }
+    } on TimeoutException catch (_) {
+      return _genericResponseFromJson(
+        1,
+        'The connection has timed out, Please try again!',
+        null,
+      );
     } catch (e) {
       if (e.toString().contains("No route to host") ||
           e.toString().contains("No address associated with hostname") ||
           e.toString().contains("Connection refused") ||
           e.toString().contains("Network is unreachable")) {
         return _genericResponseFromJson(
-            1,
-            "Consulte la conexión de datos o wifi de su dispositivo, no es posible conectarse con el servidor.",
-            null);
+          1,
+          "Check your device's data or Wi-Fi connection.",
+          null,
+        );
       } else {
         return _genericResponseFromJson(
           1,
-          'Error interno. Contacte con los desarrolladores.',
+          'Internal error. Contact support.',
           null,
         );
       }
     }
   }
 
-  Future<GenericResponse> postUser2(
-      String path, Map<String, dynamic> data) async {
-    final response = await http.post(
-      base + path,
-      headers: _headers,
-      body: jsonEncode(data),
-    );
-    if (response.statusCode == 201) {
-      return _genericResponseFromJson(0, "", response.body);
-    } else {
+  Future<GenericResponse> logout(String path, String token) async {
+    try {
+      _headersAuthorization["Authorization"] = "Token $token";
+      final response = await http
+          .post(
+            base + path.endSlash(),
+            headers: _headersAuthorization,
+          )
+          .timeout(
+            Duration(seconds: durationTimeOut),
+          );
+      //var body = jsonDecode(response.body);
       print("try ${response.statusCode}");
-      return _genericResponseFromJson(1, "", null);
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return _genericResponseFromJson(0, "", response.body);
+      } else {
+        return _genericResponseFromJson(1, response.body, null);
+      }
+    } on TimeoutException catch (_) {
+      return _genericResponseFromJson(
+        1,
+        'The connection has timed out, Please try again!',
+        null,
+      );
+    } catch (e) {
+      if (e.toString().contains("No route to host") ||
+          e.toString().contains("No address associated with hostname") ||
+          e.toString().contains("Connection refused") ||
+          e.toString().contains("Network is unreachable")) {
+        print("error 1");
+        return _genericResponseFromJson(
+          1,
+          "Check your device's data or Wi-Fi connection.",
+          null,
+        );
+      } else {
+        print("error 2");
+        return _genericResponseFromJson(
+          1,
+          'Internal error. Contact support.',
+          null,
+        );
+      }
     }
   }
 
