@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
+import 'package:my_restaurant_frontend_app/utils/my_navigator.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/widgets/admin_menu_item.dart';
+import 'package:my_restaurant_frontend_app/widgets/alert_dialog_custom.dart';
 import 'package:my_restaurant_frontend_app/widgets/drawer_admin.dart';
 
 class AdminPageHome extends StatefulWidget {
@@ -11,20 +12,24 @@ class AdminPageHome extends StatefulWidget {
 }
 
 class _AdminPageHomeState extends State<AdminPageHome> {
-  dynamic _goToListWaiterPage() {
+  _goToListWaiterPage() {
     print("goToListWaiterPage");
+    MyNavigator.goToListWaiter(context);
   }
 
   _goToListChefPage() {
     print("goToListChefPage");
+    MyNavigator.goToListChef(context);
   }
 
   _goToListDishPage() {
     print("goToListDishPage");
+    MyNavigator.goToListDishes(context);
   }
 
   _goToListIngredientsPage() {
     print("goToListIngredientsPage");
+    MyNavigator.goToListIngredients(context);
   }
 
   @override
@@ -61,6 +66,16 @@ class _AdminPageHomeState extends State<AdminPageHome> {
                 onPressed: () {
                   this._goToListWaiterPage();
                 },
+                onLongPress: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialogCustom(
+                        page: "waiters",
+                      );
+                    },
+                  );
+                },
                 color: MyColors.defaultPrimaryColor,
                 padding: EdgeInsets.all(5.0),
                 shape: RoundedRectangleBorder(
@@ -76,6 +91,16 @@ class _AdminPageHomeState extends State<AdminPageHome> {
               RaisedButton(
                 onPressed: () {
                   this._goToListChefPage();
+                },
+                onLongPress: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialogCustom(
+                        page: "chefs",
+                      );
+                    },
+                  );
                 },
                 color: Colors.deepOrangeAccent,
                 padding: EdgeInsets.all(5.0),
@@ -93,6 +118,16 @@ class _AdminPageHomeState extends State<AdminPageHome> {
                 onPressed: () {
                   this._goToListDishPage();
                 },
+                onLongPress: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialogCustom(
+                        page: "dishes",
+                      );
+                    },
+                  );
+                },
                 color: Colors.redAccent,
                 padding: EdgeInsets.all(5.0),
                 shape: RoundedRectangleBorder(
@@ -108,6 +143,16 @@ class _AdminPageHomeState extends State<AdminPageHome> {
               RaisedButton(
                 onPressed: () {
                   this._goToListIngredientsPage();
+                },
+                onLongPress: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialogCustom(
+                        page: "ingredients",
+                      );
+                    },
+                  );
                 },
                 color: MyColors.accentColor,
                 padding: EdgeInsets.all(5.0),

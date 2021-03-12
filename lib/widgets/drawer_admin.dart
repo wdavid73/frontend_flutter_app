@@ -65,25 +65,22 @@ class _DrawerAdminState extends State<DrawerAdmin> {
     setState(() {
       _selectedDestination = index;
     });
-    if (index == 0) {
-      print("home");
-    }
-    if (index == 1) {
-      print("register waiter");
-    }
-    if (index == 2) {
-      print("register chef");
-    }
-    if (index == 3) {
-      print("register admin");
-    }
-    if (index == 4) {
-      print("register dish");
-    }
-    if (index == 5) {
-      print("logout");
-      _logout();
-    }
+    Navigator.pop(context);
+    index == 0
+        ? print("home")
+        : index == 1
+            ? MyNavigator.goToRegisterNewUser(context, "Waiter")
+            : index == 2
+                ? MyNavigator.goToRegisterNewUser(context, "Chef")
+                : index == 3
+                    ? MyNavigator.goToRegisterNewUser(context, "Admin")
+                    : index == 4
+                        ? MyNavigator.goToRegisterDish(context)
+                        : index == 5
+                            ? MyNavigator.goToRegisterIngredient(context)
+                            : index == 6
+                                ? _logout()
+                                : Navigator.pop(context);
   }
 
   @override
@@ -190,6 +187,24 @@ class _DrawerAdminState extends State<DrawerAdmin> {
               selected: _selectedDestination == 4,
               onTap: () => selectDestination(4),
             ),
+            ListTile(
+              leading: Icon(
+                Icons.add_sharp,
+                color: _selectedDestination == 5
+                    ? Colors.pinkAccent
+                    : Colors.white,
+              ),
+              title: Text(
+                'Register Ingredient',
+                style: TextStyle(
+                  color: _selectedDestination == 5
+                      ? Colors.pinkAccent
+                      : Colors.white,
+                ),
+              ),
+              selected: _selectedDestination == 5,
+              onTap: () => selectDestination(5),
+            ),
             Divider(
               color: MyColors.dividerColor,
               height: 1,
@@ -201,20 +216,20 @@ class _DrawerAdminState extends State<DrawerAdmin> {
                 child: ListTile(
                   leading: Icon(
                     Icons.logout,
-                    color: _selectedDestination == 5
+                    color: _selectedDestination == 6
                         ? Colors.pinkAccent
                         : Colors.white,
                   ),
                   title: Text(
                     'Logout',
                     style: TextStyle(
-                      color: _selectedDestination == 5
+                      color: _selectedDestination == 6
                           ? Colors.pinkAccent
                           : Colors.white,
                     ),
                   ),
-                  selected: _selectedDestination == 5,
-                  onTap: () => selectDestination(5),
+                  selected: _selectedDestination == 6,
+                  onTap: () => selectDestination(6),
                 ),
               ),
             )
