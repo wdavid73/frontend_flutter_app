@@ -10,7 +10,7 @@ class _ListIngredientsPageState extends State<ListIngredientsPage> {
   @override
   Widget build(BuildContext context) {
     return ScreenOptionsDashboard(
-      title: "List Ingredients",
+      title: "Ingredients",
       child: Text("List Ingredients"),
     );
   }

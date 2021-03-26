@@ -15,11 +15,11 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      pk: json['pk'],
-      username: json['username'],
-      email: json['email'],
-      firstName: json['first_name'],
-      lastName: json['last_name'],
+      pk: json['pk']?.toInt(),
+      username: json['username']?.toString(),
+      email: json['email']?.toString(),
+      firstName: json['first_name']?.toString(),
+      lastName: json['last_name']?.toString(),
     );
   }
 }
@@ -44,24 +44,33 @@ class FullUser {
 
   factory FullUser.fromJson(Map<String, dynamic> json) {
     return FullUser(
-      id: json["id"],
-      firstName: json["first_name"],
-      lastName: json["last_name"],
-      email: json["email"],
-      phone: json["phone"],
-      cellphone: json["cellphone"],
-      userName: json["username"],
-      position: Position(
-        id: json["position"]["id"],
-        name: json["position"]["name"],
-      ),
-      restaurant: Restaurant(
-        code: json["restaurant"]["code"],
-        name: json["restaurant"]["name"],
-        address: json["restaurant"]["address"],
-        cellphone: json["restaurant"]["cellphone"],
-        phone: json["restaurant"]["phone"],
-      ),
+      id: json["id"]?.toInt(),
+      firstName: json["first_name"]?.toString(),
+      lastName: json["last_name"]?.toString(),
+      email: json["email"]?.toString(),
+      phone: json["phone"]?.toString(),
+      cellphone: json["cellphone"]?.toString(),
+      userName: json["username"]?.toString(),
+      position: (json["position"] != null)
+          ? Position.fromJson(json["position"])
+          : null,
+      restaurant: (json["restaurant"] != null)
+          ? Restaurant.fromJson(json["restaurant"])
+          : null,
     );
+  }
+
+  @override
+  String toString() {
+    return 'User: {\n'
+        'id: $id,\n'
+        'username: $userName,\n'
+        'email: $email,\n'
+        'name: $firstName $lastName,\n'
+        'phone: $phone,\n'
+        'cellphone: $cellphone,\n'
+        'restaurant: $restaurant,\n'
+        'position: $position,\n'
+        '}';
   }
 }

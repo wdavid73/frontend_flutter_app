@@ -1,12 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_restaurant_frontend_app/services/services.dart';
 import 'package:my_restaurant_frontend_app/utils/clearSession.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/my_navigator.dart';
 import 'package:my_restaurant_frontend_app/widgets/my_snack_bar.dart';
 import 'package:my_restaurant_frontend_app/widgets/userAccountHeader.dart';
-import 'package:ots/ots.dart';
 
 class DrawerAdmin extends StatefulWidget {
   @override
@@ -17,6 +19,7 @@ class _DrawerAdminState extends State<DrawerAdmin> {
   String _name, _email, _username;
   var _session = FlutterSession();
   int _selectedDestination = 0;
+  DateTime currentBackPressTime;
   RestClientServices _restClientServices = RestClientServices();
 
   @override
@@ -42,23 +45,35 @@ class _DrawerAdminState extends State<DrawerAdmin> {
     });
   }
 
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+      Fluttertoast.showToast(msg: "Press again to close app");
+    }
+    exit(0);
+  }
+
   _logout() async {
     dynamic token = await _session.get("token");
-    showLoader(isModal: true);
+    //showLoader(isModal: true);
     await _restClientServices
         .logout("dj-rest-auth/logout/", token)
         .then((response) {
       if (response.statusCode == 0) {
         clearSession();
-        MyNavigator.goToHome(context);
+        //print(context);
+        //MyNavigator.goToLogin(context);
+        exit(0);
       } else {
+        print(response.message);
         mySnackBar(
           context,
           response.message.toString(),
         );
       }
     });
-    hideLoader();
+    //hideLoader();
   }
 
   void selectDestination(int index) {

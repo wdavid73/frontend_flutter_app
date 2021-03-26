@@ -1,12 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:my_restaurant_frontend_app/class/User.dart';
 import 'package:my_restaurant_frontend_app/services/services.dart';
+import 'package:my_restaurant_frontend_app/utils/convertDataJson.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
+import 'package:my_restaurant_frontend_app/widgets/item_user.dart';
 import 'package:my_restaurant_frontend_app/widgets/screen_options_dashboard.dart';
-import 'package:my_restaurant_frontend_app/widgets/user_item.dart';
 
 class ListWaitersPage extends StatefulWidget {
   @override
@@ -15,7 +14,7 @@ class ListWaitersPage extends StatefulWidget {
 
 class _ListWaitersPageState extends State<ListWaitersPage> {
   var _session = FlutterSession();
-  List<FullUser> users = [];
+  List<FullUser> oldUsers = [], newUsers = [];
   RestClientServices _restClientServices = RestClientServices();
 
   @override
@@ -30,45 +29,47 @@ class _ListWaitersPageState extends State<ListWaitersPage> {
   }
 
   Future<void> _getWaiters() async {
-    dynamic token = await _session.get("token");
-    _restClientServices
-        .getAuthorization("api_admin/register/waiter/", token)
-        .then((response) {
-      if (response.statusCode == 0) {
-        setState(() {
-          users = parseFullUsers(response.data);
-        });
-      } else {
-        print(response.message);
-      }
-    });
-  }
-
-  List<FullUser> parseFullUsers(String responseBody) {
-    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-    return parsed.map<FullUser>((json) => FullUser.fromJson(json)).toList();
+    do {
+      dynamic token = await _session.get("token");
+      _restClientServices
+          .getAuthorization("api_admin/list_waiters/", token)
+          .then((response) {
+        if (response.statusCode == 0) {
+          newUsers = parseFullUsers(response.data, "waiters");
+          if (oldUsers.length < newUsers.length) {
+            setState(() {
+              oldUsers = newUsers;
+            });
+          }
+          newUsers = [];
+        } else {
+          print(response.message);
+          return;
+        }
+      });
+    } while (oldUsers.length < newUsers.length);
   }
 
   @override
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive(context);
     return ScreenOptionsDashboard(
-      title: "List Waiters",
+      title: "Waiters",
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
             height: responsive.height * 0.85,
-            child: (users.length == 0)
+            child: (oldUsers.length == 0)
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
                 : ListView(
                     children: List.generate(
-                      users.length,
+                      oldUsers.length,
                       (index) {
-                        return ItemUser(user: users[index]);
+                        return ItemUser(user: oldUsers[index]);
                       },
                     ),
                   ),

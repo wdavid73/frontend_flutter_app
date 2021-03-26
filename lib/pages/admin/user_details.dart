@@ -19,7 +19,7 @@ class _UserDetailsState extends State<UserDetails> {
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive(context);
     return ScreenOptionsDashboard(
-      title: "details User",
+      title: "User",
       child: Stack(
         children: [
           Align(

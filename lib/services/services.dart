@@ -12,7 +12,7 @@ class RestClientServices {
     'Content-Type': 'application/json',
   };
   String base = "http://10.0.2.2:8000/";
-  int durationTimeOut = 30;
+  int durationTimeOut = 60;
   //String base = "https://my-resturant-api.herokuapp.com/";
 
   // GETS
@@ -156,7 +156,52 @@ class RestClientServices {
             body: jsonEncode(data),
           )
           .timeout(
-            Duration(seconds: 5),
+            Duration(seconds: durationTimeOut),
+          );
+      print("try ${response.statusCode}");
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return _genericResponseFromJson(0, "", response.body);
+      } else {
+        return _genericResponseFromJson(1, response.body, null);
+      }
+    } on TimeoutException catch (_) {
+      return _genericResponseFromJson(
+        1,
+        'The connection has timed out, Please try again!',
+        null,
+      );
+    } catch (e) {
+      if (e.toString().contains("No route to host") ||
+          e.toString().contains("No address associated with hostname") ||
+          e.toString().contains("Connection refused") ||
+          e.toString().contains("Network is unreachable")) {
+        return _genericResponseFromJson(
+          1,
+          "Check your device's data or Wi-Fi connection.",
+          null,
+        );
+      } else {
+        return _genericResponseFromJson(
+          1,
+          'Internal error. Contact support.',
+          null,
+        );
+      }
+    }
+  }
+
+  Future<GenericResponse> postGenericToken(
+      String path, Map<String, dynamic> data, String token) async {
+    try {
+      _headersAuthorization["Authorization"] = "Token $token";
+      final response = await http
+          .post(
+            base + path,
+            headers: _headersAuthorization,
+            body: jsonEncode(data),
+          )
+          .timeout(
+            Duration(seconds: durationTimeOut),
           );
       print("try ${response.statusCode}");
       if (response.statusCode == 201 || response.statusCode == 200) {

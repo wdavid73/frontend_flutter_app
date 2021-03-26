@@ -9,17 +9,25 @@ class Position {
     for (final obj in json) {
       Map<String, dynamic> currentElement = obj;
       Position position = Position(
-        id: currentElement['id'],
-        name: currentElement["name"],
+        id: currentElement['id']?.toInt(),
+        name: currentElement["name"]?.toString(),
       );
       listPositions.add(position);
     }
   }
   factory Position.fromJson(Map<String, dynamic> json) {
     return Position(
-      id: json['id'],
-      name: json["name"],
+      id: json['id']?.toInt(),
+      name: json["name"]?.toString(),
     );
+  }
+
+  @override
+  String toString() {
+    return 'Position: {\n'
+        'id: $id,\n'
+        'name: $name,\n'
+        '}';
   }
 }
 

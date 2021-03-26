@@ -22,9 +22,17 @@ String convertToTitleCase(String text) {
   return capitalizedWords.join(' ');
 }
 
+String capitalizeFirstWordCase(String text) {
+  return "${text[0].toUpperCase()}${text.substring(1)}";
+}
+
 extension StringExtension on String {
   String capitalizeEachWord() {
     return convertToTitleCase(this);
+  }
+
+  String capitalizeFirstWord() {
+    return capitalizeFirstWordCase(this);
   }
 }
 

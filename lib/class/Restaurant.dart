@@ -18,4 +18,25 @@ class Restaurant {
       address: json['address'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data["code"] = code;
+    data["name"] = name;
+    data["cellphone"] = cellphone;
+    data["phone"] = phone;
+    data["address"] = address;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'Restaurant: {\n'
+        'code: $code,\n'
+        'name: $name,\n'
+        'phone: $phone,\n'
+        'cellphone: $cellphone,\n'
+        'address: $address,\n'
+        '}';
+  }
 }

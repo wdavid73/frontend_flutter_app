@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_restaurant_frontend_app/class/Dish.dart';
 import 'package:my_restaurant_frontend_app/class/User.dart';
+import 'package:my_restaurant_frontend_app/pages/admin/admin_page.dart';
+import 'package:my_restaurant_frontend_app/pages/admin/dish_details.dart';
 import 'package:my_restaurant_frontend_app/pages/admin/list/list_chef_page.dart';
 import 'package:my_restaurant_frontend_app/pages/admin/list/list_dishes_page.dart';
 import 'package:my_restaurant_frontend_app/pages/admin/list/list_ingredients_page.dart';
@@ -8,32 +11,32 @@ import 'package:my_restaurant_frontend_app/pages/admin/register/register_dish_pa
 import 'package:my_restaurant_frontend_app/pages/admin/register/register_ingredient_page.dart';
 import 'package:my_restaurant_frontend_app/pages/admin/register/register_new_user.dart';
 import 'package:my_restaurant_frontend_app/pages/admin/user_details.dart';
+import 'package:my_restaurant_frontend_app/pages/chef/chef_page.dart';
 import 'package:my_restaurant_frontend_app/pages/home/home_page.dart';
 import 'package:my_restaurant_frontend_app/pages/login_register/login_page.dart';
 import 'package:my_restaurant_frontend_app/pages/login_register/register_page.dart';
 import 'package:my_restaurant_frontend_app/pages/login_register/register_restaurant_page.dart';
-
-import 'file:///D:/Devs/MyRestaurantApp/frontend/my_restaurant_frontend_app/lib/pages/admin/admin_page.dart';
-import 'file:///D:/Devs/MyRestaurantApp/frontend/my_restaurant_frontend_app/lib/pages/chef/chef_page.dart';
-import 'file:///D:/Devs/MyRestaurantApp/frontend/my_restaurant_frontend_app/lib/pages/waiter/waiter_page.dart';
+import 'package:my_restaurant_frontend_app/pages/waiter/waiter_page.dart';
 
 class MyNavigator {
   static void goToHome(BuildContext context) {
     //Navigator.pushNamed(context, "/home");
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, anotherAnimation) {
-          return MyHomePage();
-        },
-        transitionsBuilder: (BuildContext context, Animation<double> animation,
-            Animation<double> anotherAnimation, Widget child) {
-          return FadeTransition(
-            opacity: animation,
-            child: child,
-          );
-        },
-      ),
-    );
+    Navigator.of(context).pushAndRemoveUntil(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, anotherAnimation) {
+            return MyHomePage();
+          },
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> anotherAnimation,
+              Widget child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
+        (_) => false);
   }
 
   static void goToLogin(BuildContext context) {
@@ -322,6 +325,29 @@ class MyNavigator {
       PageRouteBuilder(
         pageBuilder: (context, animation, anotherAnimation) {
           return UserDetails(user: user);
+        },
+        transitionDuration: Duration(milliseconds: 500),
+        transitionsBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> anotherAnimation, Widget child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  static void goToDishDetails(BuildContext context, Dish dish) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, anotherAnimation) {
+          return DishDetails(
+            dish: dish,
+          );
         },
         transitionDuration: Duration(milliseconds: 500),
         transitionsBuilder: (BuildContext context, Animation<double> animation,
