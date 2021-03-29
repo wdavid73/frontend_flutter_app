@@ -4,6 +4,7 @@ import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 
 class CustomDropdownForm extends StatelessWidget {
   final void Function(String value) onChanged;
+  final String Function(String text) validator;
   final double width;
   final List<dynamic> options;
   final String hintText;
@@ -13,7 +14,8 @@ class CustomDropdownForm extends StatelessWidget {
     this.onChanged,
     this.width,
     @required this.options,
-    this.hintText,
+    @required this.hintText,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -22,6 +24,7 @@ class CustomDropdownForm extends StatelessWidget {
     return Container(
       width: this.width,
       child: DropdownButtonFormField(
+        validator: this.validator,
         style: TextStyle(
           color: MyColors.primaryTextColor,
         ),

@@ -4,12 +4,12 @@ import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 
 class ScreenOptionsDashboard extends StatelessWidget {
   final String title;
-  final Widget child;
+  final Widget child , floatingActionButton;
 
   const ScreenOptionsDashboard({
     Key key,
     @required this.title,
-    @required this.child,
+    @required this.child, this.floatingActionButton,
   }) : super(key: key);
 
   @override
@@ -34,6 +34,7 @@ class ScreenOptionsDashboard extends StatelessWidget {
       body: Container(
         child: child,
       ),
+      floatingActionButton: floatingActionButton,
     );
   }
 }

@@ -250,14 +250,3 @@ class _DishDetailsState extends State<DishDetails> {
     );
   }
 }
-
-/*
-* dishIngredients != null
-          ?
-          *
-          * : Center(
-              child: CircularProgressIndicator(
-                semanticsLabel: "sin info",
-              ),
-            ),
-* */
