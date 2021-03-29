@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         Center(
                           child: ButtonTap(
-                            width: 0.7,
+                            width: responsive.width * 0.7,
                             text: "Log in",
                             textBold: true,
                             icon: Icons.login_outlined,
@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Column(
                             children: [
                               ButtonTap(
-                                width: 0.7,
+                                width: responsive.width * 0.7,
                                 text: "Sign In a User",
                                 textBold: true,
                                 icon: Icons.arrow_forward_ios_outlined,
@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 withShadow: false,
                               ),
                               ButtonTap(
-                                width: 0.7,
+                                width: responsive.width * 0.7,
                                 text: "Sign In a Restaurant",
                                 textBold: true,
                                 icon: Icons.arrow_forward_ios_outlined,

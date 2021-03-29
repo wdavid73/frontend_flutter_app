@@ -8,6 +8,7 @@ import 'package:my_restaurant_frontend_app/services/services.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
+import 'package:my_restaurant_frontend_app/widgets/basic_alert_dialog.dart';
 import 'package:my_restaurant_frontend_app/widgets/dialog_add_ingredient_dish.dart';
 import 'package:my_restaurant_frontend_app/widgets/item_ingredient.dart';
 import 'package:my_restaurant_frontend_app/widgets/message_dialog.dart';
@@ -23,7 +24,7 @@ class _DishDetailsState extends State<DishDetails> {
   RestClientServices _restClientServices = RestClientServices();
   var _session = FlutterSession();
   DishIngredients dishIngredients;
-  bool showText = false;
+  bool showText = false, favorite = false;
 
   @override
   void initState() {
@@ -68,10 +69,22 @@ class _DishDetailsState extends State<DishDetails> {
             ),
           );
         });
-    print(result);
     if (result) {
       this._detailsDish();
     }
+  }
+
+  void dialogDeleteIngredient(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return BasicAlertDialog(
+            title: "Delete Ingredient",
+            desc: "Are you sure about delete this ingredient in the dish",
+            okButton: true,
+          );
+        });
   }
 
   @override
@@ -79,133 +92,153 @@ class _DishDetailsState extends State<DishDetails> {
     final Responsive responsive = Responsive(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("details dish ${widget.dish.id}"),
+        elevation: 1,
+        actions: [
+          FlatButton(
+            minWidth: responsive.wp(5),
+            onPressed: () {
+              setState(() {
+                favorite = !favorite;
+              });
+            },
+            child: Icon(
+              favorite ? Icons.favorite : Icons.favorite_border,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
-      body: dishIngredients != null
-          ? Stack(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.topCenter,
+      body: Stack(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              //constraints: BoxConstraints.expand(),
+              height: responsive.height * 0.4,
+              width: responsive.width,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(widget.dish.photo),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: ClipRRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: Container(
-                    //constraints: BoxConstraints.expand(),
-                    height: responsive.height * 0.4,
-                    width: responsive.width,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(dishIngredients.dish.photo),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: ClipRRect(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                        child: Container(
-                          //alignment: Alignment.center,
-                          color: Colors.grey.withOpacity(0.1),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Column(
+                    //alignment: Alignment.center,
+                    color: Colors.grey.withOpacity(0.1),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                              ),
+                              child: Column(
                                 children: <Widget>[
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10,
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Align(
+                                      child: Text(
+                                        "${widget.dish.name}"
+                                            .capitalizeEachWord(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: responsive.dp(4),
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      alignment: Alignment.topLeft,
                                     ),
-                                    child: Column(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Align(
-                                            child: Text(
-                                              "${dishIngredients.dish.name}"
-                                                  .capitalizeEachWord(),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: responsive.dp(4),
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            alignment: Alignment.topLeft,
-                                          ),
+                                  ),
+                                  SizedBox(
+                                    height: responsive.height * 0.145,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: Text(
+                                        "\$ ${widget.dish.price}"
+                                            .capitalizeEachWord(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: responsive.dp(3),
+                                          color: Colors.white,
                                         ),
-                                        SizedBox(
-                                          height: responsive.height * 0.145,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: Align(
-                                            alignment: Alignment.bottomRight,
-                                            child: Text(
-                                              "\$ ${dishIngredients.dish.price}"
-                                                  .capitalizeEachWord(),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: responsive.dp(3),
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
+                                      ),
                                     ),
                                   )
                                 ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: responsive.height * 0.6, // pass
-                    width: responsive.width,
-                    decoration: new BoxDecoration(
-                      color: MyColors.darkPrimaryColor,
-                      borderRadius: BorderRadius.only(
-                        topRight: const Radius.circular(20),
-                        topLeft: const Radius.circular(20),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: Column(
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: responsive.height * 0.6, // pass
+              width: responsive.width,
+              decoration: new BoxDecoration(
+                color: MyColors.darkPrimaryColor,
+                borderRadius: BorderRadius.only(
+                  topRight: const Radius.circular(20),
+                  topLeft: const Radius.circular(20),
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: dishIngredients != null
+                            ? Column(
                                 children: List.generate(
                                   dishIngredients.ingredients.length,
                                   (index) {
                                     return ItemIngredient(
                                       ingredient:
                                           dishIngredients.ingredients[index],
+                                      longPress: () =>
+                                          this.dialogDeleteIngredient(context),
                                     );
                                   },
                                 ),
+                              )
+                            : SizedBox(
+                                height: responsive.height * 0.5,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Colors.white,
+                                    semanticsLabel: "sin info",
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                )
-              ],
-            )
-          : Center(
-              child: CircularProgressIndicator(
-                semanticsLabel: "sin info",
+                ],
               ),
             ),
+          )
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           this._displayTextInputDialog(context);
@@ -217,3 +250,14 @@ class _DishDetailsState extends State<DishDetails> {
     );
   }
 }
+
+/*
+* dishIngredients != null
+          ?
+          *
+          * : Center(
+              child: CircularProgressIndicator(
+                semanticsLabel: "sin info",
+              ),
+            ),
+* */

@@ -1,32 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/class/Ingredient.dart';
+import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 
-class ItemIngredient extends StatefulWidget {
+class ItemIngredient extends StatelessWidget {
   final Ingredient ingredient;
+  final void Function() longPress;
 
-  ItemIngredient({Key key, this.ingredient}) : super(key: key);
+  const ItemIngredient({
+    Key key,
+    this.ingredient,
+    this.longPress,
+  }) : super(key: key);
 
-  @override
-  _ItemIngredientState createState() => _ItemIngredientState();
-}
-
-class _ItemIngredientState extends State<ItemIngredient> {
   @override
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive(context);
-    return ListTile(
-      leading: CircleAvatar(
-        child: Image.asset(
-          'assets/icons/icon_ingredientes.png',
-          scale: 0.1,
+    return Container(
+      child: Card(
+        color: MyColors.defaultPrimaryColor,
+        elevation: 1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: new InkWell(
+          onLongPress: this.longPress,
+          child: ListTile(
+            leading: CircleAvatar(
+              child: Image.asset(
+                'assets/icons/icon_ingredientes.png',
+                scale: 0.1,
+              ),
+            ),
+            title: Text(
+              '${ingredient.name}'.capitalizeEachWord(),
+              style: TextStyle(
+                fontSize: responsive.dp(2),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            subtitle: Text(
+              '${ingredient.quantity} ${ingredient.unit}',
+              style: TextStyle(
+                fontSize: responsive.dp(1.5),
+              ),
+            ),
+          ),
         ),
       ),
-      title: Text(
-        '${widget.ingredient.name}'.capitalizeEachWord(),
-      ),
-      subtitle: Text('${widget.ingredient.quantity} ${widget.ingredient.unit}'),
     );
   }
 }

@@ -7,22 +7,23 @@ class ButtonTap extends StatefulWidget {
   final String text;
   final IconData icon;
   final GestureTapCallback onPressed;
-  final Color iconColor, fillColor;
+  final Color iconColor, fillColor, textColor;
   final bool textBold, withShadow;
   final double width;
 
   ButtonTap({
     Key key,
     @required this.text,
-    @required this.icon,
     @required this.onPressed,
     @required this.width,
+    this.icon,
     this.iconColor,
     this.textBold = false,
     this.withShadow = false,
     this.fillColor,
+    this.textColor = Colors.white,
   })  : assert(text != null),
-        assert(icon != null),
+        // assert(icon != null),
         super(key: key);
 
   @override
@@ -36,7 +37,7 @@ class _ButtonTapState extends State<ButtonTap> {
     return Padding(
       padding: const EdgeInsets.only(top: 15.0),
       child: Container(
-        width: responsive.width * widget.width,
+        width: widget.width,
         decoration: widget.withShadow
             ? BoxDecoration(
                 borderRadius: const BorderRadius.all(
@@ -66,20 +67,22 @@ class _ButtonTapState extends State<ButtonTap> {
                       '${widget.text}',
                       maxLines: 1,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: widget.textColor,
                         fontSize: responsive.dp(2),
                         fontWeight: widget.textBold ? FontWeight.bold : null,
                       ),
                     )
                   ],
                 ),
-                Icon(
-                  widget.icon,
-                  color: widget.iconColor != null
-                      ? widget.iconColor
-                      : Colors.white,
-                  size: responsive.dp(2.8),
-                ),
+                widget.icon != null
+                    ? Icon(
+                        widget.icon,
+                        color: widget.iconColor != null
+                            ? widget.iconColor
+                            : Colors.white,
+                        size: responsive.dp(2.8),
+                      )
+                    : Container(),
               ],
             ),
           ),

@@ -12,6 +12,7 @@ import 'package:my_restaurant_frontend_app/utils/convertDataJson.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/widgets/custom_dropdowm_form.dart';
+import 'package:ots/ots.dart';
 
 class DialogAddIngredientInDish extends StatefulWidget {
   final String title, descriptions, dishId;
@@ -72,12 +73,12 @@ class _DialogAddIngredientInDishState extends State<DialogAddIngredientInDish> {
   void _addIngredientInDish() async {
     var isOk = _formKeyAddIngredientDish.currentState.validate();
     if (isOk) {
+      showLoader(isModal: true);
       Map<String, dynamic> data = {
         'dish_id': widget.dishId,
         'ingredient_id': _ingredientId,
       };
       _formKeyAddIngredientDish.currentState.reset();
-      print(data);
       dynamic token = await _session.get("token");
       await _restClientServices
           .postGenericToken("api_admin/dish/dish_ingredient", data, token)
@@ -99,6 +100,7 @@ class _DialogAddIngredientInDishState extends State<DialogAddIngredientInDish> {
           );
         }
       });
+      hideLoader();
     }
   }
 
