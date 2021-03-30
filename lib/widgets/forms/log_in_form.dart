@@ -44,6 +44,23 @@ class _LogInFormState extends State<LogInForm> {
     return userId;
   }
 
+  _getRestaurantCodeByUser(String userId) async {
+    dynamic token = await FlutterSession().get("token");
+    await _restClientServices
+        .get("api_admin/api_auth/restaurants/code/$userId/")
+        .then((response) {
+      if (response.statusCode == 0) {
+        String restaurantCode = jsonDecode(response.data)["code"];
+        _session.set("restaurantCode", restaurantCode);
+      } else {
+        print("error message");
+        print(response.statusCode);
+        print(response.data);
+        print(response.message);
+      }
+    });
+  }
+
   _getPositionByUser(String userId) async {
     dynamic token = await FlutterSession().get("token");
     String positionName;
@@ -55,6 +72,7 @@ class _LogInFormState extends State<LogInForm> {
         dynamic json = jsonDecode(response.data);
         Position position = Position.fromJson(json);
         positionName = position.name;
+        _session.set("position_user", positionName);
       }
     });
     return positionName;
@@ -80,6 +98,7 @@ class _LogInFormState extends State<LogInForm> {
           _session.set("token", token);
           String userId = await this._getUserId(token);
           String positionName = await this._getPositionByUser(userId);
+          await this._getRestaurantCodeByUser(userId);
           positionName == "Admin"
               ? MyNavigator.goToAdminPage(context)
               : positionName == "Chef"

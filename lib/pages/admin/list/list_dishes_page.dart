@@ -36,7 +36,7 @@ class _ListDishesPageState extends State<ListDishesPage> {
         .then((response) {
       if (response.statusCode == 0) {
         setState(() {
-          dishes = parseDish(response.data);
+          dishes = parseDishes(response.data);
         });
       } else {
         print(response.message);

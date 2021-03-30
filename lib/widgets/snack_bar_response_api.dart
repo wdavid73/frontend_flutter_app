@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:my_restaurant_frontend_app/utils/responsive.dart';
+// import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/widgets/my_snack_bar.dart';
 
 void snackBarResponseAPI(BuildContext context, Map<String, dynamic> json) {
-  final Responsive responsive = Responsive(context);
+  // final Responsive responsive = Responsive(context);
   print(json);
   json.forEach(
     (k, v) {

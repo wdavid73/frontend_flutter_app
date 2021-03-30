@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:my_restaurant_frontend_app/widgets/screen_options_dashboard.dart';
+import 'package:flutter_session/flutter_session.dart';
+import 'package:my_restaurant_frontend_app/services/services.dart';
+import 'package:my_restaurant_frontend_app/utils/responsive.dart';
+import 'package:my_restaurant_frontend_app/widgets/forms/register_user_form.dart';
+import 'package:my_restaurant_frontend_app/widgets/icon_container.dart';
+import 'package:my_restaurant_frontend_app/widgets/screen_session.dart';
 
 class RegisterNewUser extends StatefulWidget {
   final String position;
@@ -12,11 +17,30 @@ class RegisterNewUser extends StatefulWidget {
 }
 
 class _RegisterNewUserState extends State<RegisterNewUser> {
+  GlobalKey _formNewUser = GlobalKey();
+  RestClientServices _restClientServices = RestClientServices();
+  var _session = FlutterSession();
+
   @override
   Widget build(BuildContext context) {
-    return ScreenOptionsDashboard(
-      title: "Register User",
-      child: Text("Register User ${widget.position}"),
+    final Responsive responsive = Responsive(context);
+    return ScreenSession(
+      title: "Sign in",
+      heightBack: responsive.height * 0.7,
+      heightFront: responsive.height * 0.7,
+      iconContainer: IconContainer(
+        iconUrl: 'assets/icons/014-customer_service.svg',
+        size: responsive.dp(15),
+      ),
+      child: RegisterUserForm(existPosition: widget.position),
     );
+    // return ScreenOptionsDashboard(
+    //   title: "Register User",
+    //   // child: Text("Register User ${widget.position}"),
+    //   child: Container(
+    //     color: Colors.blue,
+    //     child: RegisterUserForm(existPosition: widget.position),
+    //   ),
+    // );
   }
 }

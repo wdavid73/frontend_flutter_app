@@ -16,7 +16,7 @@ class DrawerAdmin extends StatefulWidget {
 }
 
 class _DrawerAdminState extends State<DrawerAdmin> {
-  String _name, _email, _username;
+  String _name, _email;
   var _session = FlutterSession();
   int _selectedDestination = 0;
   DateTime currentBackPressTime;
@@ -36,12 +36,12 @@ class _DrawerAdminState extends State<DrawerAdmin> {
   Future<void> _getUserInfo() async {
     dynamic name = await _session.get("name");
     dynamic email = await _session.get("email");
-    dynamic username = await _session.get("username");
+    // dynamic username = await _session.get("username");
 
     setState(() {
       _name = name;
       _email = email;
-      _username = username;
+      // _username = username;
     });
   }
 

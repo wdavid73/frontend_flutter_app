@@ -3,8 +3,10 @@ import 'dart:convert';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:my_restaurant_frontend_app/class/Positions.dart';
 import 'package:my_restaurant_frontend_app/services/services.dart';
+import 'package:my_restaurant_frontend_app/utils/convertDataJson.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
@@ -13,8 +15,12 @@ import 'package:my_restaurant_frontend_app/widgets/message_dialog.dart';
 import 'package:my_restaurant_frontend_app/widgets/my_snack_bar.dart';
 import 'package:my_restaurant_frontend_app/widgets/select_position.dart';
 import 'package:my_restaurant_frontend_app/widgets/snack_bar_response_api.dart';
+import 'package:ots/ots.dart';
 
 class RegisterUserForm extends StatefulWidget {
+  final String existPosition;
+
+  const RegisterUserForm({Key key, this.existPosition}) : super(key: key);
   @override
   _RegisterUserFormState createState() => _RegisterUserFormState();
 }
@@ -27,13 +33,15 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
       _phone,
       _password,
       _codeRestaurant;
+  String restaurantCode = "";
   Timer _timer;
   int _idPosition, _start = 10;
-  bool isLoading = false, enableForm = false;
-  bool obscureText = true;
+  bool isLoading = true, enableForm = false, obscureText = true;
   RestClientServices _restClientServices = RestClientServices();
   List<Position> positions = [];
+  Position position;
   GlobalKey<FormState> _formKeySignIn = GlobalKey();
+  var _session = FlutterSession();
 
   @override
   void initState() {
@@ -42,7 +50,10 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
   }
 
   void _init() {
-    this._getPositions();
+    print(widget.existPosition);
+    widget.existPosition == null
+        ? this._getPositions()
+        : this._getPositionByName(widget.existPosition);
     super.initState();
   }
 
@@ -52,13 +63,14 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
       if (_start == 0) {
         setState(() {
           timer.cancel();
+          isLoading = false;
         });
-        MessageDialog.dialogMessageWarning(
-          context,
-          "Warning",
-          "Please check your internet connection or contact support.",
-          "Continue",
-        );
+        // MessageDialog.dialogMessageWarning(
+        //   context,
+        //   "Warning",
+        //   "Please check your internet connection or contact support.",
+        //   "Continue",
+        // );
       } else {
         setState(() {
           _start--;
@@ -77,16 +89,32 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
         enableForm = true;
       });
       // ignore: unnecessary_statements
-      positions.length <= 0 ? startTimer() : null;
+      //positions.length <= 0 ? startTimer() : null;
     });
+  }
+
+  Future<void> _getPositionByName(String positionName) async {
+    startTimer();
+    dynamic code = await _session.get("restaurantCode");
+    await _restClientServices
+        .get("api_admin/api_auth/positions/by_name/$positionName")
+        .then(
+      (value) {
+        if (value.statusCode == 0) {
+          setState(() {
+            position = parsePosition(value.data);
+            restaurantCode = code;
+            enableForm = true;
+          });
+        }
+      },
+    );
   }
 
   _register() async {
     final isOk = _formKeySignIn.currentState.validate();
-    setState(() {
-      isLoading = true;
-    });
     if (isOk) {
+      showLoader(isModal: true);
       Map<String, dynamic> data = {
         "first_name": _firstName,
         "last_name": _lastName,
@@ -94,8 +122,9 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
         "email": _email,
         "phone": _phone,
         "password": _password,
-        "position_id": _idPosition,
-        "restaurant_code": _codeRestaurant
+        "position_id": widget.existPosition == null ? _idPosition : position.id,
+        "restaurant_code":
+            restaurantCode.length < 0 ? _codeRestaurant : restaurantCode,
       };
       //print(data);
       await _restClientServices
@@ -110,36 +139,31 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
           ).then((value) {
             _formKeySignIn.currentState.reset();
             FocusScope.of(context).requestFocus(new FocusNode());
-            setState(() {
-              isLoading = false;
-            });
           });
         } else {
           try {
             var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
             snackBarResponseAPI(context, decodedJson);
           } on FormatException catch (e) {
+            print(e);
             mySnackBar(context, value.message);
           }
         }
       });
+      hideLoader();
     }
-    setState(() {
-      isLoading = false;
-    });
   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _timer.cancel();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive(context);
     double inputWidth = responsive.width * 0.85;
-
     return Container(
       constraints: BoxConstraints(maxWidth: responsive.width),
       child: Form(
@@ -148,6 +172,18 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            widget.existPosition != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: Text(
+                      widget.existPosition.capitalizeFirstWord(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: responsive.dp(2.5),
+                      ),
+                    ),
+                  )
+                : Container(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -231,7 +267,6 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
               fontSize: responsive.dp(2),
               obscureText: !obscureText,
               showPassword: () {
-                print("show or hide password");
                 setState(() {
                   obscureText = !obscureText;
                 });
@@ -267,79 +302,87 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
                 return null;
               },
             ),
-            InputText(
-              obscureText: true,
-              formEnabled: enableForm,
-              width: inputWidth,
-              type: TextInputType.text,
-              label: 'code of your restaurant',
-              fontSize: responsive.dp(2),
-              onChanged: (text) {
-                _codeRestaurant = text;
-              },
-              validator: (text) {
-                if (text.trim().length <= 0 || text.isEmpty) {
-                  return "invalid code of restaurant".capitalizeEachWord();
-                }
-                return null;
-              },
-            ),
-            (positions.length == 0 || positions.length == null)
-                ? Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          RefreshProgressIndicator(
-                            backgroundColor: MyColors.lightPrimaryColor,
-                            //minHeight: responsive.height * 0.015,
-                          ),
-                          Text(
-                            "Loading Positions...",
-                            style: TextStyle(
-                              color: MyColors.primaryTextColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: responsive.dp(1.8),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                : SelectPosition(
-                    position: positions,
-                    onChanged: (value) {
-                      FocusScope.of(context).requestFocus(new FocusNode());
-                      _idPosition = value;
+            (restaurantCode == "")
+                ? InputText(
+                    obscureText: true,
+                    formEnabled: enableForm,
+                    width: inputWidth,
+                    type: TextInputType.text,
+                    label: 'code of your restaurant',
+                    fontSize: responsive.dp(2),
+                    onChanged: (text) {
+                      _codeRestaurant = text;
                     },
-                    validator: (value) {
-                      if (value == null) {
-                        return "please select a position".capitalizeEachWord();
+                    validator: (text) {
+                      if (text.trim().length <= 0 || text.isEmpty) {
+                        return "invalid code of restaurant"
+                            .capitalizeEachWord();
                       }
                       return null;
                     },
-                  ),
-            !isLoading
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: AnimatedButton(
-                      text: "Register",
-                      color: MyColors.accentColor,
-                      icon: Icons.person_add,
-                      width: responsive.width * 0.8,
-                      buttonTextStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: responsive.dp(2),
-                        fontWeight: FontWeight.bold,
-                      ),
-                      pressEvent: () {
-                        this._register();
-                      },
+                  )
+                : Text(
+                    "Restaurant Code : $restaurantCode",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: responsive.dp(2),
                     ),
-                  )
-                : Center(
-                    child: CircularProgressIndicator(),
-                  )
+                  ),
+            (widget.existPosition == null)
+                ? (positions.length == 0 || positions.length == null)
+                    ? Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              RefreshProgressIndicator(
+                                backgroundColor: MyColors.lightPrimaryColor,
+                                //minHeight: responsive.height * 0.015,
+                              ),
+                              Text(
+                                "Loading Positions...",
+                                style: TextStyle(
+                                  color: MyColors.primaryTextColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: responsive.dp(1.8),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    : SelectPosition(
+                        position: positions,
+                        onChanged: (value) {
+                          FocusScope.of(context).requestFocus(new FocusNode());
+                          _idPosition = value;
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return "please select a position"
+                                .capitalizeEachWord();
+                          }
+                          return null;
+                        },
+                      )
+                : Container(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: AnimatedButton(
+                text: "Register",
+                color: MyColors.accentColor,
+                icon: Icons.person_add,
+                width: responsive.width * 0.8,
+                buttonTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: responsive.dp(2),
+                  fontWeight: FontWeight.bold,
+                ),
+                pressEvent: () {
+                  this._register();
+                },
+              ),
+            ),
           ],
         ),
       ),

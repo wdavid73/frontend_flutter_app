@@ -68,6 +68,7 @@ class RestClientServices {
           .timeout(
             Duration(seconds: durationTimeOut),
           );
+      print("try ${response.statusCode}");
 
       if (response.statusCode == 200) {
         return _genericResponseFromJson(0, "", response.body);
@@ -112,6 +113,7 @@ class RestClientServices {
           .timeout(
             Duration(seconds: durationTimeOut),
           );
+      print("try ${response.statusCode}");
       if (response.statusCode == 200) {
         return _genericResponseFromJson(0, "", response.body);
       } else {

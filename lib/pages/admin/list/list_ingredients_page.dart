@@ -6,6 +6,7 @@ import 'package:my_restaurant_frontend_app/class/Ingredient.dart';
 import 'package:my_restaurant_frontend_app/services/services.dart';
 import 'package:my_restaurant_frontend_app/utils/convertDataJson.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
+import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 import 'package:my_restaurant_frontend_app/widgets/dialog_add_ingredient.dart';
 import 'package:my_restaurant_frontend_app/widgets/item_ingredient.dart';
@@ -71,6 +72,7 @@ class _ListIngredientsPageState extends State<ListIngredientsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final Responsive responsive = Responsive(context);
     return ScreenOptionsDashboard(
       title: "Ingredients",
       child: Column(
@@ -80,11 +82,18 @@ class _ListIngredientsPageState extends State<ListIngredientsPage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: ingredients.length > 0
-                    ? Column(
+                    ? GridView.count(
+                        primary: false,
+                        padding: const EdgeInsets.all(20),
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        crossAxisCount: responsive.isTablet ? 3 : 2,
+                        shrinkWrap: true,
                         children: List.generate(ingredients.length, (index) {
                           return ItemIngredient(
+                            length: ingredients.length,
                             ingredient: ingredients[index],
-                            longPress: () => print("long press"),
+                            longPress: () => print("long press delete"),
                           );
                         }),
                       )
