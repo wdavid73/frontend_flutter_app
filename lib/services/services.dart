@@ -11,9 +11,9 @@ class RestClientServices {
     'Authorization': 'Token ',
     'Content-Type': 'application/json',
   };
-  String base = "http://10.0.2.2:8000/";
+  //String base = "http://10.0.2.2:8000/";
   int durationTimeOut = 60;
-  //String base = "https://my-resturant-api.herokuapp.com/";
+  String base = "https://my-resturant-api.herokuapp.com/";
 
   // GETS
   Future<PositionResponse> getPositions(String path) async {
