@@ -8,7 +8,6 @@ import 'package:my_restaurant_frontend_app/pages/admin/list/list_dishes_page.dar
 import 'package:my_restaurant_frontend_app/pages/admin/list/list_ingredients_page.dart';
 import 'package:my_restaurant_frontend_app/pages/admin/list/list_waiters_page.dart';
 import 'package:my_restaurant_frontend_app/pages/admin/register/register_dish_page.dart';
-import 'package:my_restaurant_frontend_app/pages/admin/register/register_ingredient_page.dart';
 import 'package:my_restaurant_frontend_app/pages/admin/register/register_new_user.dart';
 import 'package:my_restaurant_frontend_app/pages/admin/user_details.dart';
 import 'package:my_restaurant_frontend_app/pages/chef/chef_page.dart';
@@ -299,26 +298,26 @@ class MyNavigator {
     );
   }
 
-  static void goToRegisterIngredient(BuildContext context) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, anotherAnimation) {
-          return RegisterIngredientPage();
-        },
-        transitionDuration: Duration(milliseconds: 500),
-        transitionsBuilder: (BuildContext context, Animation<double> animation,
-            Animation<double> anotherAnimation, Widget child) {
-          return SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(1, 0),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          );
-        },
-      ),
-    );
-  }
+  // static void goToRegisterIngredient(BuildContext context) {
+  //   Navigator.of(context).push(
+  //     PageRouteBuilder(
+  //       pageBuilder: (context, animation, anotherAnimation) {
+  //         return RegisterIngredientPage();
+  //       },
+  //       transitionDuration: Duration(milliseconds: 500),
+  //       transitionsBuilder: (BuildContext context, Animation<double> animation,
+  //           Animation<double> anotherAnimation, Widget child) {
+  //         return SlideTransition(
+  //           position: Tween<Offset>(
+  //             begin: const Offset(1, 0),
+  //             end: Offset.zero,
+  //           ).animate(animation),
+  //           child: child,
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   static void goToUserDetails(BuildContext context, FullUser user) {
     Navigator.of(context).push(

@@ -6,7 +6,11 @@ import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 class InputText extends StatelessWidget {
   final String label, hintText;
   final TextInputType type;
-  final bool obscureText, borderEnabled, formEnabled, isPasswordField;
+  final bool obscureText,
+      borderEnabled,
+      formEnabled,
+      isPasswordField,
+      withPrefix;
   final double fontSize;
   final double width;
   final void Function(String text) onChanged;
@@ -20,12 +24,13 @@ class InputText extends StatelessWidget {
     this.obscureText = false,
     this.borderEnabled = true,
     this.formEnabled = false,
+    this.isPasswordField = false,
+    this.withPrefix = false,
     this.fontSize = 15,
     this.onChanged,
     this.validator,
     this.hintText,
     @required this.width,
-    this.isPasswordField = false,
     this.showPassword,
   }) : super(key: key);
   @override
@@ -47,6 +52,10 @@ class InputText extends StatelessWidget {
           onChanged: this.onChanged,
           validator: this.validator,
           decoration: InputDecoration(
+            prefixIcon: this.withPrefix ? Icon(Icons.attach_money) : null,
+            prefixIconConstraints: this.withPrefix
+                ? BoxConstraints(minWidth: 0, minHeight: 0)
+                : null,
             suffixIcon: this.isPasswordField
                 ? IconButton(
                     icon: Icon(

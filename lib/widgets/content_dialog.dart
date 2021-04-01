@@ -38,7 +38,7 @@ class ContentDialogMessage extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomRight,
-            child: FlatButton(
+            child: TextButton(
               onPressed: () {
                 Clipboard.setData(
                   new ClipboardData(text: code),

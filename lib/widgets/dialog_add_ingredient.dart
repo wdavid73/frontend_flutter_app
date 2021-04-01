@@ -35,6 +35,10 @@ class _DialogAddIngredientState extends State<DialogAddIngredient> {
   GlobalKey<FormState> _formKeyAddIngredient = GlobalKey();
   RestClientServices _restClientServices = RestClientServices();
   var _session = FlutterSession();
+<<<<<<< HEAD
+=======
+  // bool _update = false;
+>>>>>>> admin_page
 
   void _addIngredient() async {
     var isOk = _formKeyAddIngredient.currentState.validate();

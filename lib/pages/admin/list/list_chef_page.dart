@@ -59,9 +59,14 @@ class _ListChefPageState extends State<ListChefPage> {
                     child: CircularProgressIndicator(),
                   )
                 : ListView(
-                    children: List.generate(users.length, (index) {
-                      return ItemUser(user: users[index]);
-                    }),
+                    children: List.generate(
+                      users.length,
+                      (index) {
+                        return ItemUser(
+                          user: users[index],
+                        );
+                      },
+                    ),
                   ),
           ),
         ],

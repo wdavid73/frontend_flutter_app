@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
+import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 
 class ScreenOptionsDashboard extends StatelessWidget {
   final String title;
-  final Widget child , floatingActionButton;
+  final Widget child, floatingActionButton;
 
   const ScreenOptionsDashboard({
     Key key,
     @required this.title,
-    @required this.child, this.floatingActionButton,
+    @required this.child,
+    this.floatingActionButton,
   }) : super(key: key);
 
   @override
@@ -21,7 +23,7 @@ class ScreenOptionsDashboard extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
         title: Text(
-          title,
+          title.capitalizeEachWord(),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
@@ -31,9 +33,7 @@ class ScreenOptionsDashboard extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        child: child,
-      ),
+      body: child,
       floatingActionButton: floatingActionButton,
     );
   }

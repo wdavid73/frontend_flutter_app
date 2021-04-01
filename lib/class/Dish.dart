@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:my_restaurant_frontend_app/class/Ingredient.dart';
 import 'package:my_restaurant_frontend_app/class/Restaurant.dart';
 
@@ -67,6 +69,28 @@ class Dish {
         'type: $type,\n'
         'restaurant_code: ${restaurant.code}\n'
         '}';
+  }
+}
+
+class DishUploadImage {
+  String name, type;
+  double price;
+  File photo;
+
+  DishUploadImage({
+    this.name,
+    this.price,
+    this.type,
+    this.photo,
+  });
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data["name"] = name;
+    data["price"] = price;
+    data["type"] = type;
+    data["photo"] = photo;
+    return data;
   }
 }
 

@@ -33,7 +33,7 @@ class _ChefPageHomeState extends State<ChefPageHome> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("chef page home"),
-            FlatButton(
+            TextButton(
               onPressed: () {
                 this._logout();
               },

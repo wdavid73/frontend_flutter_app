@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
+import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 
 class CustomDropdownForm extends StatelessWidget {
@@ -20,6 +21,7 @@ class CustomDropdownForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Responsive responsive = Responsive(context);
     //List<String> options = ['gr', 'oz'];
     return Container(
       width: this.width,
@@ -63,11 +65,22 @@ class CustomDropdownForm extends StatelessWidget {
             return value.runtimeType != String
                 ? DropdownMenuItem<String>(
                     value: value.id,
-                    child: Text(value.name),
+                    child: Text(
+                      "${value.name} - ${value.quantity?.toString()}${value.unit?.toString()}"
+                          .capitalizeEachWord(),
+                      style: TextStyle(
+                        fontSize: responsive.dp(1.8),
+                      ),
+                    ),
                   )
                 : DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(
+                      "$value".capitalizeFirstWord(),
+                      style: TextStyle(
+                        fontSize: responsive.dp(1.8),
+                      ),
+                    ),
                   );
           },
         ).toList(),

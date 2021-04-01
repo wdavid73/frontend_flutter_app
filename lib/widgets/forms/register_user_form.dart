@@ -144,8 +144,12 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
           try {
             var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
             snackBarResponseAPI(context, decodedJson);
+<<<<<<< HEAD
           } on FormatException catch (e) {
             print(e);
+=======
+          } on FormatException {
+>>>>>>> admin_page
             mySnackBar(context, value.message);
           }
         }
