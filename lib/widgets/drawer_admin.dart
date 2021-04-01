@@ -43,6 +43,8 @@ class _DrawerAdminState extends State<DrawerAdmin> {
       _email = email;
       _username = username;
     });
+
+    print(_username);
   }
 
   Future<bool> onWillPop() {
@@ -92,10 +94,10 @@ class _DrawerAdminState extends State<DrawerAdmin> {
                     : index == 4
                         ? MyNavigator.goToRegisterDish(context)
                         : index == 5
-                            ? MyNavigator.goToRegisterIngredient(context)
-                            : index == 6
-                                ? _logout()
-                                : Navigator.pop(context);
+                            ? _logout()
+                            : Navigator.pop(context);
+    // ? MyNavigator.goToRegisterIngredient(context)
+    // : index == 6
   }
 
   @override
@@ -202,24 +204,24 @@ class _DrawerAdminState extends State<DrawerAdmin> {
               selected: _selectedDestination == 4,
               onTap: () => selectDestination(4),
             ),
-            ListTile(
-              leading: Icon(
-                Icons.add_sharp,
-                color: _selectedDestination == 5
-                    ? Colors.pinkAccent
-                    : Colors.white,
-              ),
-              title: Text(
-                'Register Ingredient',
-                style: TextStyle(
-                  color: _selectedDestination == 5
-                      ? Colors.pinkAccent
-                      : Colors.white,
-                ),
-              ),
-              selected: _selectedDestination == 5,
-              onTap: () => selectDestination(5),
-            ),
+            // ListTile(
+            //   leading: Icon(
+            //     Icons.add_sharp,
+            //     color: _selectedDestination == 5
+            //         ? Colors.pinkAccent
+            //         : Colors.white,
+            //   ),
+            //   title: Text(
+            //     'Register Ingredient',
+            //     style: TextStyle(
+            //       color: _selectedDestination == 5
+            //           ? Colors.pinkAccent
+            //           : Colors.white,
+            //     ),
+            //   ),
+            //   selected: _selectedDestination == 5,
+            //   onTap: () => selectDestination(5),
+            // ),
             Divider(
               color: MyColors.dividerColor,
               height: 1,
@@ -231,20 +233,20 @@ class _DrawerAdminState extends State<DrawerAdmin> {
                 child: ListTile(
                   leading: Icon(
                     Icons.logout,
-                    color: _selectedDestination == 6
+                    color: _selectedDestination == 5
                         ? Colors.pinkAccent
                         : Colors.white,
                   ),
                   title: Text(
                     'Logout',
                     style: TextStyle(
-                      color: _selectedDestination == 6
+                      color: _selectedDestination == 5
                           ? Colors.pinkAccent
                           : Colors.white,
                     ),
                   ),
-                  selected: _selectedDestination == 6,
-                  onTap: () => selectDestination(6),
+                  selected: _selectedDestination == 5,
+                  onTap: () => selectDestination(5),
                 ),
               ),
             )

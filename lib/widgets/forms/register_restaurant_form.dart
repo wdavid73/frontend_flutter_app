@@ -55,7 +55,7 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
           try {
             var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
             snackBarResponseAPI(context, decodedJson);
-          } on FormatException catch (e) {
+          } on FormatException {
             mySnackBar(context, value.message);
           }
         }
