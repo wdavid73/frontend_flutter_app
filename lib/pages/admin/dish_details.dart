@@ -94,8 +94,8 @@ class _DishDetailsState extends State<DishDetails> {
       appBar: AppBar(
         elevation: 1,
         actions: [
-          FlatButton(
-            minWidth: responsive.wp(5),
+          TextButton(
+            // minWidth: responsive.wp(5),
             onPressed: () {
               setState(() {
                 favorite = !favorite;

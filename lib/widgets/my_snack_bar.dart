@@ -7,7 +7,7 @@ Future mySnackBar(context, String message) async {
   await Future.delayed(
     Duration(seconds: 1),
   );
-  Scaffold.of(context).showSnackBar(
+  ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(20)),

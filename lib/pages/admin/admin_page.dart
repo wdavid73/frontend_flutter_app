@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:my_restaurant_frontend_app/utils/my_colors.dart';
 import 'package:my_restaurant_frontend_app/utils/my_navigator.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
@@ -12,6 +13,34 @@ class AdminPageHome extends StatefulWidget {
 }
 
 class _AdminPageHomeState extends State<AdminPageHome> {
+  String _name, _email, _username;
+  var _session = FlutterSession();
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
+  void _init() {
+    this._getUserInfo();
+    super.initState();
+  }
+
+  Future<void> _getUserInfo() async {
+    dynamic name = await _session.get("name");
+    dynamic email = await _session.get("email");
+    dynamic username = await _session.get("username");
+
+    setState(() {
+      _name = name;
+      _email = email;
+      _username = username;
+    });
+
+    print(_username);
+  }
+
   _goToListWaiterPage() {
     print("goToListWaiterPage");
     MyNavigator.goToListWaiter(context);
@@ -51,7 +80,11 @@ class _AdminPageHomeState extends State<AdminPageHome> {
           ),
         ),
       ),
-      drawer: DrawerAdmin(),
+      drawer: DrawerAdmin(
+        name: _name,
+        email: _email,
+        username: _username,
+      ),
       body: Center(
         child: Container(
           width: responsive.width * 0.95,
@@ -62,7 +95,7 @@ class _AdminPageHomeState extends State<AdminPageHome> {
             crossAxisSpacing: 4,
             crossAxisCount: 2,
             children: [
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   this._goToListWaiterPage();
                 },
@@ -76,11 +109,7 @@ class _AdminPageHomeState extends State<AdminPageHome> {
                     },
                   );
                 },
-                color: MyColors.defaultPrimaryColor,
-                padding: EdgeInsets.all(5.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+                style: buttonStyles(MyColors.defaultPrimaryColor),
                 child: AdminMenuItem(
                   iconUrl: 'assets/icons/waiter.svg',
                   text: "List of Waiters",
@@ -88,7 +117,7 @@ class _AdminPageHomeState extends State<AdminPageHome> {
                   sizeIcon: responsive.dp(15),
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   this._goToListChefPage();
                 },
@@ -102,11 +131,7 @@ class _AdminPageHomeState extends State<AdminPageHome> {
                     },
                   );
                 },
-                color: Colors.deepOrangeAccent,
-                padding: EdgeInsets.all(5.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+                style: buttonStyles(Colors.deepOrangeAccent),
                 child: AdminMenuItem(
                   iconUrl: 'assets/icons/cooking.svg',
                   text: "List of Chefs",
@@ -114,7 +139,7 @@ class _AdminPageHomeState extends State<AdminPageHome> {
                   sizeIcon: responsive.dp(15),
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   this._goToListDishPage();
                 },
@@ -128,11 +153,7 @@ class _AdminPageHomeState extends State<AdminPageHome> {
                     },
                   );
                 },
-                color: Colors.redAccent,
-                padding: EdgeInsets.all(5.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+                style: buttonStyles(Colors.redAccent),
                 child: AdminMenuItem(
                   iconUrl: 'assets/icons/019-food_tray.svg',
                   text: "List of Dishes",
@@ -140,7 +161,7 @@ class _AdminPageHomeState extends State<AdminPageHome> {
                   sizeIcon: responsive.dp(15),
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   this._goToListIngredientsPage();
                 },
@@ -154,11 +175,7 @@ class _AdminPageHomeState extends State<AdminPageHome> {
                     },
                   );
                 },
-                color: MyColors.accentColor,
-                padding: EdgeInsets.all(5.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+                style: buttonStyles(MyColors.accentColor),
                 child: AdminMenuItem(
                   iconUrl: 'assets/icons/ingredients.svg',
                   text: "List of Ingredients",
@@ -169,6 +186,22 @@ class _AdminPageHomeState extends State<AdminPageHome> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  ButtonStyle buttonStyles(Color color) {
+    return ButtonStyle(
+      backgroundColor: MaterialStateProperty.all<Color>(
+        color,
+      ),
+      shape: MaterialStateProperty.all<OutlinedBorder>(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+        const EdgeInsets.all(5),
       ),
     );
   }

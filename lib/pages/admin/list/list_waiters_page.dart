@@ -69,7 +69,9 @@ class _ListWaitersPageState extends State<ListWaitersPage> {
                     children: List.generate(
                       oldUsers.length,
                       (index) {
-                        return ItemUser(user: oldUsers[index]);
+                        return ItemUser(
+                          user: oldUsers[index],
+                        );
                       },
                     ),
                   ),

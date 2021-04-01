@@ -11,41 +11,24 @@ import 'package:my_restaurant_frontend_app/widgets/my_snack_bar.dart';
 import 'package:my_restaurant_frontend_app/widgets/userAccountHeader.dart';
 
 class DrawerAdmin extends StatefulWidget {
+  final String name, email, username;
+
+  const DrawerAdmin({
+    Key key,
+    this.name,
+    this.email,
+    this.username,
+  }) : super(key: key);
+
   @override
   _DrawerAdminState createState() => _DrawerAdminState();
 }
 
 class _DrawerAdminState extends State<DrawerAdmin> {
-  String _name, _email, _username;
   var _session = FlutterSession();
   int _selectedDestination = 0;
   DateTime currentBackPressTime;
   RestClientServices _restClientServices = RestClientServices();
-
-  @override
-  void initState() {
-    _init();
-    super.initState();
-  }
-
-  void _init() {
-    this._getUserInfo();
-    super.initState();
-  }
-
-  Future<void> _getUserInfo() async {
-    dynamic name = await _session.get("name");
-    dynamic email = await _session.get("email");
-    dynamic username = await _session.get("username");
-
-    setState(() {
-      _name = name;
-      _email = email;
-      _username = username;
-    });
-
-    print(_username);
-  }
 
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
@@ -108,7 +91,7 @@ class _DrawerAdminState extends State<DrawerAdmin> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            UserAccountHeader(name: this._name, email: this._email),
+            UserAccountHeader(name: widget.name, email: widget.email),
             Divider(
               color: MyColors.dividerColor,
               height: 1,

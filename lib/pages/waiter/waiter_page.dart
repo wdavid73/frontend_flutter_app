@@ -33,7 +33,7 @@ class _WaiterPageHomeState extends State<WaiterPageHome> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("waiter page home"),
-            FlatButton(
+            TextButton(
               onPressed: () {
                 this._logout();
               },

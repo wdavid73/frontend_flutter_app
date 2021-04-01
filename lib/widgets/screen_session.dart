@@ -35,65 +35,89 @@ class ScreenSession extends StatelessWidget {
           ),
         ),
       ),
-      body: Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              height: this.heightBack,
-              width: responsive.width,
-              color: MyColors.darkPrimaryColor,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 50,
-                          vertical: 10,
-                        ),
-                        child: this.iconContainer,
-                      )
-                    ],
-                  )
-                ],
-              ),
+      body: ContentForm(
+        heightFront: this.heightFront,
+        heightBack: this.heightBack,
+        iconContainer: this.iconContainer,
+        child: this.child,
+      ),
+    );
+  }
+}
+
+class ContentForm extends StatelessWidget {
+  final double heightBack, heightFront;
+  final Widget iconContainer, child;
+
+  const ContentForm({
+    Key key,
+    this.heightBack,
+    this.iconContainer,
+    this.heightFront,
+    this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final Responsive responsive = Responsive(context);
+    return Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            height: this.heightBack,
+            width: responsive.width,
+            color: MyColors.darkPrimaryColor,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 50,
+                        vertical: 10,
+                      ),
+                      child: this.iconContainer,
+                    )
+                  ],
+                )
+              ],
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: this.heightFront, // pass
-              width: responsive.width,
-              decoration: new BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: const Radius.circular(30),
-                  topLeft: const Radius.circular(30),
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 40),
-                        child: this.child,
-                      ),
-                    ),
-                  )
-                ],
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            height: this.heightFront, // pass
+            width: responsive.width,
+            decoration: new BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topRight: const Radius.circular(30),
+                topLeft: const Radius.circular(30),
               ),
             ),
-          )
-        ],
-      ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 40),
+                      child: child, // FORM OR ANOTHER WIDGET
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 }
