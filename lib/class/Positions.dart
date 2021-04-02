@@ -15,6 +15,7 @@ class Position {
       listPositions.add(position);
     }
   }
+
   factory Position.fromJson(Map<String, dynamic> json) {
     return Position(
       id: json['id']?.toInt(),

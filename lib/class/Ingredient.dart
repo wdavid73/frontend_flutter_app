@@ -19,12 +19,14 @@ class Ingredient {
     this.quantity,
     this.unit,
   });
+
   Ingredient.fromJson(Map<String, dynamic> json) {
     id = json["id"]?.toString();
     name = json["name"]?.toString();
     quantity = json["quantity"]?.toString();
     unit = json["unit"]?.toString();
   }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data["name"] = name;

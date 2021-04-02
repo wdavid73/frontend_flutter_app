@@ -15,7 +15,9 @@ import 'package:my_restaurant_frontend_app/widgets/message_dialog.dart';
 
 class DishDetails extends StatefulWidget {
   final Dish dish;
+
   const DishDetails({Key key, this.dish}) : super(key: key);
+
   @override
   _DishDetailsState createState() => _DishDetailsState();
 }

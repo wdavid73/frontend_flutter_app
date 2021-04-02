@@ -47,7 +47,7 @@ class _LogInFormState extends State<LogInForm> {
   _getRestaurantCodeByUser(String userId) async {
     dynamic token = await FlutterSession().get("token");
     await _restClientServices
-        .get("api_admin/api_auth/restaurants/code/$userId/")
+        .getAuthorization("api_admin/api_auth/restaurants/code/$userId/", token)
         .then((response) {
       if (response.statusCode == 0) {
         String restaurantCode = jsonDecode(response.data)["code"];

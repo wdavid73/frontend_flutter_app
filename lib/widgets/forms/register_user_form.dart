@@ -21,6 +21,7 @@ class RegisterUserForm extends StatefulWidget {
   final String existPosition;
 
   const RegisterUserForm({Key key, this.existPosition}) : super(key: key);
+
   @override
   _RegisterUserFormState createState() => _RegisterUserFormState();
 }
@@ -65,12 +66,6 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
           timer.cancel();
           isLoading = false;
         });
-        // MessageDialog.dialogMessageWarning(
-        //   context,
-        //   "Warning",
-        //   "Please check your internet connection or contact support.",
-        //   "Continue",
-        // );
       } else {
         setState(() {
           _start--;
@@ -88,8 +83,6 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
         positions = value.position != null ? value.position : [];
         enableForm = true;
       });
-      // ignore: unnecessary_statements
-      //positions.length <= 0 ? startTimer() : null;
     });
   }
 
@@ -144,12 +137,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
           try {
             var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
             snackBarResponseAPI(context, decodedJson);
-<<<<<<< HEAD
-          } on FormatException catch (e) {
-            print(e);
-=======
           } on FormatException {
->>>>>>> admin_page
             mySnackBar(context, value.message);
           }
         }
@@ -158,11 +146,11 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
     }
   }
 
-  // @override
-  // void dispose() {
-  //   _timer.cancel();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

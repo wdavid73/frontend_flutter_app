@@ -10,6 +10,7 @@ class UserDetails extends StatefulWidget {
   final FullUser user;
 
   UserDetails({Key key, this.user}) : super(key: key);
+
   @override
   _UserDetailsState createState() => _UserDetailsState();
 }

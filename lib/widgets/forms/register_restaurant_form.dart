@@ -55,15 +55,12 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
           try {
             var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
             snackBarResponseAPI(context, decodedJson);
-<<<<<<< HEAD
-          } on FormatException catch (e) {
-            print(e);
-=======
-          } on FormatException {
->>>>>>> admin_page
-            mySnackBar(context, value.message);
-          }
+
+        }  on FormatException {
+
+        mySnackBar(context, value.message);
         }
+      }
       });
     }
     setState(() {
@@ -98,7 +95,9 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
                   _name = text;
                 },
                 validator: (text) {
-                  if (text.trim().length <= 0 || text.isEmpty) {
+                  if (text
+                      .trim()
+                      .length <= 0 || text.isEmpty) {
                     return "invalid restaurant name".capitalizeEachWord();
                   }
                   return null;
@@ -118,7 +117,9 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
                   _address = text;
                 },
                 validator: (text) {
-                  if (text.trim().length <= 0 || text.isEmpty) {
+                  if (text
+                      .trim()
+                      .length <= 0 || text.isEmpty) {
                     return "invalid address restaurant".capitalizeEachWord();
                   }
                   return null;
@@ -138,7 +139,9 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
                   _phone = text;
                 },
                 validator: (text) {
-                  if (text.trim().length <= 0 || text.isEmpty) {
+                  if (text
+                      .trim()
+                      .length <= 0 || text.isEmpty) {
                     return "invalid phone".capitalizeEachWord();
                   }
                   return null;
@@ -158,7 +161,9 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
                   _cellphone = text;
                 },
                 validator: (text) {
-                  if (text.trim().length <= 0 || text.isEmpty) {
+                  if (text
+                      .trim()
+                      .length <= 0 || text.isEmpty) {
                     return "invalid cellphone".capitalizeEachWord();
                   }
                   return null;
@@ -167,28 +172,28 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
             ),
             !isLoading
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 25),
-                    child: Container(
-                      height: responsive.height * 0.05,
-                      child: AnimatedButton(
-                        text: "Register",
-                        color: MyColors.accentColor,
-                        icon: Icons.add_business_outlined,
-                        width: responsive.width * 0.8,
-                        buttonTextStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: responsive.dp(2),
-                          fontWeight: FontWeight.bold,
-                        ),
-                        pressEvent: () {
-                          this._submitRestaurant();
-                        },
-                      ),
-                    ),
-                  )
-                : Center(
-                    child: CircularProgressIndicator(),
+              padding: const EdgeInsets.symmetric(vertical: 25),
+              child: Container(
+                height: responsive.height * 0.05,
+                child: AnimatedButton(
+                  text: "Register",
+                  color: MyColors.accentColor,
+                  icon: Icons.add_business_outlined,
+                  width: responsive.width * 0.8,
+                  buttonTextStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: responsive.dp(2),
+                    fontWeight: FontWeight.bold,
                   ),
+                  pressEvent: () {
+                    this._submitRestaurant();
+                  },
+                ),
+              ),
+            )
+                : Center(
+              child: CircularProgressIndicator(),
+            ),
           ],
         ),
       ),

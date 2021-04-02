@@ -33,6 +33,7 @@ class InputText extends StatelessWidget {
     @required this.width,
     this.showPassword,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(

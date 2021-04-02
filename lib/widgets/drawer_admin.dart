@@ -25,41 +25,11 @@ class DrawerAdmin extends StatefulWidget {
 }
 
 class _DrawerAdminState extends State<DrawerAdmin> {
-<<<<<<< HEAD
-  String _name, _email;
-=======
->>>>>>> admin_page
   var _session = FlutterSession();
   int _selectedDestination = 0;
   DateTime currentBackPressTime;
   RestClientServices _restClientServices = RestClientServices();
 
-<<<<<<< HEAD
-  @override
-  void initState() {
-    _init();
-    super.initState();
-  }
-
-  void _init() {
-    this._getUserInfo();
-    super.initState();
-  }
-
-  Future<void> _getUserInfo() async {
-    dynamic name = await _session.get("name");
-    dynamic email = await _session.get("email");
-    // dynamic username = await _session.get("username");
-
-    setState(() {
-      _name = name;
-      _email = email;
-      // _username = username;
-    });
-  }
-
-=======
->>>>>>> admin_page
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
     if (currentBackPressTime == null ||
@@ -96,21 +66,17 @@ class _DrawerAdminState extends State<DrawerAdmin> {
       _selectedDestination = index;
     });
     Navigator.pop(context);
-    index == 0
-        ? print("home")
-        : index == 1
-            ? MyNavigator.goToRegisterNewUser(context, "Waiter")
-            : index == 2
-                ? MyNavigator.goToRegisterNewUser(context, "Chef")
-                : index == 3
-                    ? MyNavigator.goToRegisterNewUser(context, "Admin")
-                    : index == 4
-                        ? MyNavigator.goToRegisterDish(context)
-                        : index == 5
-                            ? _logout()
-                            : Navigator.pop(context);
-    // ? MyNavigator.goToRegisterIngredient(context)
-    // : index == 6
+    index != 0 ?? index == 1
+        ? MyNavigator.goToRegisterNewUser(context, "Waiter")
+        : index == 2
+            ? MyNavigator.goToRegisterNewUser(context, "Chef")
+            : index == 3
+                ? MyNavigator.goToRegisterNewUser(context, "Admin")
+                : index == 4
+                    ? MyNavigator.goToRegisterDish(context)
+                    : index == 5
+                        ? _logout()
+                        : Navigator.pop(context);
   }
 
   @override

@@ -10,6 +10,7 @@ class RestClientServices {
     'Authorization': 'Token ',
     'Content-Type': 'application/json',
   };
+
   //String base = "http://10.0.2.2:8000/";
   int durationTimeOut = 60;
   String base = "https://my-resturant-api.herokuapp.com/";
@@ -390,5 +391,6 @@ class GenericResponse {
   int statusCode;
   String message;
   dynamic data;
+
   GenericResponse({this.statusCode, this.message, this.data});
 }

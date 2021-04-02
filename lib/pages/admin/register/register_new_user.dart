@@ -1,25 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_session/flutter_session.dart';
-import 'package:my_restaurant_frontend_app/services/services.dart';
 import 'package:my_restaurant_frontend_app/utils/responsive.dart';
 import 'package:my_restaurant_frontend_app/widgets/forms/register_user_form.dart';
 import 'package:my_restaurant_frontend_app/widgets/icon_container.dart';
 import 'package:my_restaurant_frontend_app/widgets/screen_session.dart';
 
-class RegisterNewUser extends StatefulWidget {
+class RegisterNewUser extends StatelessWidget {
   final String position;
-
   // receive data from the FirstScreen as a parameter
   RegisterNewUser({Key key, @required this.position}) : super(key: key);
-
-  @override
-  _RegisterNewUserState createState() => _RegisterNewUserState();
-}
-
-class _RegisterNewUserState extends State<RegisterNewUser> {
-  GlobalKey _formNewUser = GlobalKey();
-  RestClientServices _restClientServices = RestClientServices();
-  var _session = FlutterSession();
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +20,7 @@ class _RegisterNewUserState extends State<RegisterNewUser> {
         iconUrl: 'assets/icons/014-customer_service.svg',
         size: responsive.dp(15),
       ),
-      child: RegisterUserForm(existPosition: widget.position),
+      child: RegisterUserForm(existPosition: position),
     );
-    // return ScreenOptionsDashboard(
-    //   title: "Register User",
-    //   // child: Text("Register User ${widget.position}"),
-    //   child: Container(
-    //     color: Colors.blue,
-    //     child: RegisterUserForm(existPosition: widget.position),
-    //   ),
-    // );
   }
 }

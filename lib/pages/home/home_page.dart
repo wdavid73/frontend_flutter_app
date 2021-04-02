@@ -18,6 +18,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   DateTime currentBackPressTime;
+
   _logIn() {
     MyNavigator.goToLogin(context);
   }

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/class/User.dart';
 import 'package:my_restaurant_frontend_app/utils/my_navigator.dart';
-<<<<<<< HEAD
-// import 'package:my_restaurant_frontend_app/utils/responsive.dart';
-=======
->>>>>>> admin_page
 import 'package:my_restaurant_frontend_app/utils/string_extension.dart';
 
 class ItemUser extends StatefulWidget {
@@ -19,11 +15,8 @@ class ItemUser extends StatefulWidget {
 class _ItemUserState extends State<ItemUser> {
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    // final Responsive responsive = Responsive(context);
-=======
     //final Responsive responsive = Responsive(context);
->>>>>>> admin_page
+
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.white,
