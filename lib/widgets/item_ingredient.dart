@@ -82,26 +82,5 @@ class ItemIngredient extends StatelessWidget {
         ),
       ],
     );
-    // return ListTile(
-    //   leading: CircleAvatar(
-    //     child: Image.asset(
-    //       'assets/icons/icon_ingredientes.png',
-    //       scale: 0.1,
-    //     ),
-    //   ),
-    //   title: Text(
-    //     '${ingredient.name}'.capitalizeEachWord(),
-    //     style: TextStyle(
-    //       fontSize: responsive.dp(2),
-    //       fontWeight: FontWeight.w400,
-    //     ),
-    //   ),
-    //   subtitle: Text(
-    //     '${ingredient.quantity} ${ingredient.unit}',
-    //     style: TextStyle(
-    //       fontSize: responsive.dp(1.5),
-    //     ),
-    //   ),
-    // );
   }
 }

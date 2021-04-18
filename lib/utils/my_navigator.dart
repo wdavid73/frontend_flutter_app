@@ -39,7 +39,6 @@ class MyNavigator {
   }
 
   static void goToLogin(BuildContext context) {
-    //Navigator.of(context).pushNamed("/login_page");
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, anotherAnimation) {
@@ -257,6 +256,7 @@ class MyNavigator {
   }
 
   static void goToRegisterNewUser(BuildContext context, String position) {
+    Navigator.pop(context);
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, anotherAnimation) {
@@ -278,6 +278,7 @@ class MyNavigator {
   }
 
   static void goToRegisterDish(BuildContext context) {
+    Navigator.pop(context);
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, anotherAnimation) {

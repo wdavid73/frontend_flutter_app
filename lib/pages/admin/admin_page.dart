@@ -12,13 +12,16 @@ class AdminPageHome extends StatefulWidget {
   _AdminPageHomeState createState() => _AdminPageHomeState();
 }
 
-class _AdminPageHomeState extends State<AdminPageHome> {
+class _AdminPageHomeState extends State<AdminPageHome>
+    with TickerProviderStateMixin {
   String _name, _email, _username;
+
   var _session = FlutterSession();
 
   @override
   void initState() {
     _init();
+
     super.initState();
   }
 
@@ -64,9 +67,10 @@ class _AdminPageHomeState extends State<AdminPageHome> {
   @override
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive(context);
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MyColors.darkPrimaryColor,
+        //backgroundColor: MyColors.darkPrimaryColor,
         centerTitle: true,
         elevation: 0,
         title: Text(
@@ -85,105 +89,107 @@ class _AdminPageHomeState extends State<AdminPageHome> {
         email: _email,
         username: _username,
       ),
-      body: Center(
-        child: Container(
-          width: responsive.width * 0.95,
-          child: GridView.count(
-            padding: const EdgeInsets.all(4),
-            shrinkWrap: true,
-            mainAxisSpacing: 4,
-            crossAxisSpacing: 4,
-            crossAxisCount: 2,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  this._goToListWaiterPage();
-                },
-                onLongPress: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialogCustom(
-                        page: "waiters",
-                      );
-                    },
-                  );
-                },
-                style: buttonStyles(MyColors.defaultPrimaryColor),
-                child: AdminMenuItem(
-                  iconUrl: 'assets/icons/waiter.svg',
-                  text: "List of Waiters",
-                  textColor: Colors.white,
-                  sizeIcon: responsive.dp(15),
+      body: Container(
+        child: Center(
+          child: Container(
+            width: responsive.width * 0.95,
+            child: GridView.count(
+              padding: const EdgeInsets.all(4),
+              shrinkWrap: true,
+              mainAxisSpacing: 4,
+              crossAxisSpacing: 4,
+              crossAxisCount: 2,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    this._goToListWaiterPage();
+                  },
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialogCustom(
+                          page: "waiters",
+                        );
+                      },
+                    );
+                  },
+                  style: buttonStyles(MyColors.defaultPrimaryColor),
+                  child: AdminMenuItem(
+                    iconUrl: 'assets/icons/waiter.svg',
+                    text: "List of Waiters",
+                    textColor: Colors.white,
+                    sizeIcon: responsive.dp(15),
+                  ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  this._goToListChefPage();
-                },
-                onLongPress: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialogCustom(
-                        page: "chefs",
-                      );
-                    },
-                  );
-                },
-                style: buttonStyles(Colors.deepOrangeAccent),
-                child: AdminMenuItem(
-                  iconUrl: 'assets/icons/cooking.svg',
-                  text: "List of Chefs",
-                  textColor: Colors.white,
-                  sizeIcon: responsive.dp(15),
+                ElevatedButton(
+                  onPressed: () {
+                    this._goToListChefPage();
+                  },
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialogCustom(
+                          page: "chefs",
+                        );
+                      },
+                    );
+                  },
+                  style: buttonStyles(Colors.deepOrangeAccent),
+                  child: AdminMenuItem(
+                    iconUrl: 'assets/icons/cooking.svg',
+                    text: "List of Chefs",
+                    textColor: Colors.white,
+                    sizeIcon: responsive.dp(15),
+                  ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  this._goToListDishPage();
-                },
-                onLongPress: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialogCustom(
-                        page: "dishes",
-                      );
-                    },
-                  );
-                },
-                style: buttonStyles(Colors.redAccent),
-                child: AdminMenuItem(
-                  iconUrl: 'assets/icons/019-food_tray.svg',
-                  text: "List of Dishes",
-                  textColor: Colors.white,
-                  sizeIcon: responsive.dp(15),
+                ElevatedButton(
+                  onPressed: () {
+                    this._goToListDishPage();
+                  },
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialogCustom(
+                          page: "dishes",
+                        );
+                      },
+                    );
+                  },
+                  style: buttonStyles(Colors.redAccent),
+                  child: AdminMenuItem(
+                    iconUrl: 'assets/icons/019-food_tray.svg',
+                    text: "List of Dishes",
+                    textColor: Colors.white,
+                    sizeIcon: responsive.dp(15),
+                  ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  this._goToListIngredientsPage();
-                },
-                onLongPress: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialogCustom(
-                        page: "ingredients",
-                      );
-                    },
-                  );
-                },
-                style: buttonStyles(MyColors.accentColor),
-                child: AdminMenuItem(
-                  iconUrl: 'assets/icons/ingredients.svg',
-                  text: "List of Ingredients",
-                  textColor: Colors.white,
-                  sizeIcon: responsive.dp(15),
+                ElevatedButton(
+                  onPressed: () {
+                    this._goToListIngredientsPage();
+                  },
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialogCustom(
+                          page: "ingredients",
+                        );
+                      },
+                    );
+                  },
+                  style: buttonStyles(MyColors.accentColor),
+                  child: AdminMenuItem(
+                    iconUrl: 'assets/icons/ingredients.svg',
+                    text: "List of Ingredients",
+                    textColor: Colors.white,
+                    sizeIcon: responsive.dp(15),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

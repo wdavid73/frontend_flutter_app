@@ -61,4 +61,13 @@ class PositionResponse {
       );
     }
   }
+
+  @override
+  String toString() {
+    return 'PositionResponse: {\n'
+        'position: $position,\n'
+        'msg: $msg,\n'
+        'statusCode: $statusCode,\n'
+        '}';
+  }
 }

@@ -14,7 +14,6 @@ import 'package:my_restaurant_frontend_app/widgets/input_text.dart';
 import 'package:my_restaurant_frontend_app/widgets/message_dialog.dart';
 import 'package:my_restaurant_frontend_app/widgets/my_snack_bar.dart';
 import 'package:my_restaurant_frontend_app/widgets/select_position.dart';
-import 'package:my_restaurant_frontend_app/widgets/snack_bar_response_api.dart';
 import 'package:ots/ots.dart';
 
 class RegisterUserForm extends StatefulWidget {
@@ -51,7 +50,6 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
   }
 
   void _init() {
-    print(widget.existPosition);
     widget.existPosition == null
         ? this._getPositions()
         : this._getPositionByName(widget.existPosition);
@@ -76,11 +74,10 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
 
   Future<void> _getPositions() async {
     await _restClientServices
-        .getPositions("api_admin/api_auth/positions")
-        .then((value) {
-      print(value.position);
+        .get("api_admin/api_auth/positions")
+        .then((response) {
       setState(() {
-        positions = value.position != null ? value.position : [];
+        positions = parsePositionList(response.data);
         enableForm = true;
       });
     });
@@ -117,7 +114,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
         "password": _password,
         "position_id": widget.existPosition == null ? _idPosition : position.id,
         "restaurant_code":
-            restaurantCode.length < 0 ? _codeRestaurant : restaurantCode,
+            restaurantCode.length <= 0 ? _codeRestaurant : restaurantCode,
       };
       //print(data);
       await _restClientServices
@@ -134,9 +131,10 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
             FocusScope.of(context).requestFocus(new FocusNode());
           });
         } else {
+          hideLoader();
           try {
             var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
-            snackBarResponseAPI(context, decodedJson);
+            //snackBarResponseAPI(context, decodedJson);
           } on FormatException {
             mySnackBar(context, value.message);
           }
@@ -321,7 +319,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
                     ),
                   ),
             (widget.existPosition == null)
-                ? (positions.length == 0 || positions.length == null)
+                ? (positions.length == 0)
                     ? Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Center(

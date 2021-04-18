@@ -11,9 +11,10 @@ class RestClientServices {
     'Content-Type': 'application/json',
   };
 
-  //String base = "http://10.0.2.2:8000/";
+  String base = "http://10.0.2.2:8000/";
+  //String base = "https://my-resturant-api.herokuapp.com/";
+  //String base = "http://localhost:8000/";
   int durationTimeOut = 60;
-  String base = "https://my-resturant-api.herokuapp.com/";
 
   // GETS
   Future<PositionResponse> getPositions(String path) async {
@@ -27,8 +28,10 @@ class RestClientServices {
             Duration(seconds: durationTimeOut),
           );
       if (response.statusCode == 200) {
+        print(response);
         return PositionResponse.fromJson(jsonDecode(response.body), 0, "");
       } else {
+        print("no 200");
         return PositionResponse.fromJson(null, 1, response.body);
       }
     } on TimeoutException catch (_) {
@@ -183,6 +186,8 @@ class RestClientServices {
           null,
         );
       } else {
+        print("#### INTERNAL ERROR");
+        print(e);
         return _genericResponseFromJson(
           1,
           'Internal error. Contact support.',

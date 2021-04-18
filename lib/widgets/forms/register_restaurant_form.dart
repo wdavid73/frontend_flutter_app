@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_restaurant_frontend_app/services/services.dart';
@@ -40,7 +39,7 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
       };
       print(data);
       await _restClientServices
-          .postWithoutSlash("api_admin/api_auth/restaurants", data)
+          .postGeneric("api_admin/api_auth/restaurants/", data)
           .then((value) {
         if (value.statusCode == 0) {
           MessageDialog.dialogMessageSuccessRestaurant(
@@ -55,12 +54,10 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
           try {
             var decodedJson = jsonDecode(value.message) as Map<String, dynamic>;
             snackBarResponseAPI(context, decodedJson);
-
-        }  on FormatException {
-
-        mySnackBar(context, value.message);
+          } on FormatException {
+            mySnackBar(context, value.message);
+          }
         }
-      }
       });
     }
     setState(() {
@@ -95,9 +92,7 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
                   _name = text;
                 },
                 validator: (text) {
-                  if (text
-                      .trim()
-                      .length <= 0 || text.isEmpty) {
+                  if (text.trim().length <= 0 || text.isEmpty) {
                     return "invalid restaurant name".capitalizeEachWord();
                   }
                   return null;
@@ -117,9 +112,7 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
                   _address = text;
                 },
                 validator: (text) {
-                  if (text
-                      .trim()
-                      .length <= 0 || text.isEmpty) {
+                  if (text.trim().length <= 0 || text.isEmpty) {
                     return "invalid address restaurant".capitalizeEachWord();
                   }
                   return null;
@@ -139,9 +132,7 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
                   _phone = text;
                 },
                 validator: (text) {
-                  if (text
-                      .trim()
-                      .length <= 0 || text.isEmpty) {
+                  if (text.trim().length <= 0 || text.isEmpty) {
                     return "invalid phone".capitalizeEachWord();
                   }
                   return null;
@@ -161,9 +152,7 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
                   _cellphone = text;
                 },
                 validator: (text) {
-                  if (text
-                      .trim()
-                      .length <= 0 || text.isEmpty) {
+                  if (text.trim().length <= 0 || text.isEmpty) {
                     return "invalid cellphone".capitalizeEachWord();
                   }
                   return null;
@@ -172,28 +161,28 @@ class _RegisterRestaurantFormState extends State<RegisterRestaurantForm> {
             ),
             !isLoading
                 ? Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25),
-              child: Container(
-                height: responsive.height * 0.05,
-                child: AnimatedButton(
-                  text: "Register",
-                  color: MyColors.accentColor,
-                  icon: Icons.add_business_outlined,
-                  width: responsive.width * 0.8,
-                  buttonTextStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: responsive.dp(2),
-                    fontWeight: FontWeight.bold,
-                  ),
-                  pressEvent: () {
-                    this._submitRestaurant();
-                  },
-                ),
-              ),
-            )
+                    padding: const EdgeInsets.symmetric(vertical: 25),
+                    child: Container(
+                      height: responsive.height * 0.05,
+                      child: AnimatedButton(
+                        text: "Register",
+                        color: MyColors.accentColor,
+                        icon: Icons.add_business_outlined,
+                        width: responsive.width * 0.8,
+                        buttonTextStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: responsive.dp(2),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        pressEvent: () {
+                          this._submitRestaurant();
+                        },
+                      ),
+                    ),
+                  )
                 : Center(
-              child: CircularProgressIndicator(),
-            ),
+                    child: CircularProgressIndicator(),
+                  ),
           ],
         ),
       ),

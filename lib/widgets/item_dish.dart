@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_restaurant_frontend_app/class/Dish.dart';
 import 'package:my_restaurant_frontend_app/utils/my_navigator.dart';

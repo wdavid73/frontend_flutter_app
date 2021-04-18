@@ -110,10 +110,12 @@ class _LogInFormState extends State<LogInForm> {
                           "Porfavor registre su usuario correctamente o contacte con soporte",
                         );
         } else {
+          hideLoader();
           mySnackBar(
             context,
             response.message.toString(),
           );
+          print(jsonDecode(response.message.toString())["non_field_errors"]);
           print("!!error");
         }
       });
@@ -196,6 +198,7 @@ class _LogInFormState extends State<LogInForm> {
               "you dont have a account?".capitalizeEachWord(),
               style: TextStyle(
                 fontSize: responsive.dp(2),
+                color: Colors.black,
                 fontWeight: FontWeight.w500,
               ),
             ),

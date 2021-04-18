@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:my_restaurant_frontend_app/class/Ingredient.dart';
@@ -12,6 +13,7 @@ import 'package:my_restaurant_frontend_app/widgets/dialog_add_ingredient.dart';
 import 'package:my_restaurant_frontend_app/widgets/item_ingredient.dart';
 import 'package:my_restaurant_frontend_app/widgets/message_dialog.dart';
 import 'package:my_restaurant_frontend_app/widgets/screen_options_dashboard.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ListIngredientsPage extends StatefulWidget {
   @override
@@ -21,6 +23,10 @@ class ListIngredientsPage extends StatefulWidget {
 class _ListIngredientsPageState extends State<ListIngredientsPage> {
   var _session = FlutterSession();
   List<Ingredient> ingredients = [];
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
+
   RestClientServices _restClientServices = RestClientServices();
 
   @override
@@ -32,6 +38,22 @@ class _ListIngredientsPageState extends State<ListIngredientsPage> {
   void _init() {
     this._getIngredients();
     super.initState();
+  }
+
+  void _onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+    this._getIngredients();
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
   }
 
   Future<void> _getIngredients() async {
@@ -75,39 +97,53 @@ class _ListIngredientsPageState extends State<ListIngredientsPage> {
     final Responsive responsive = Responsive(context);
     return ScreenOptionsDashboard(
       title: "Ingredients",
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: ingredients.length > 0
-                    ? GridView.count(
-                        primary: false,
-                        padding: const EdgeInsets.all(20),
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        crossAxisCount: responsive.isTablet ? 3 : 2,
-                        shrinkWrap: true,
-                        children: List.generate(ingredients.length, (index) {
-                          return ItemIngredient(
-                            length: ingredients.length,
-                            ingredient: ingredients[index],
-                            longPress: () => print("long press delete"),
-                          );
-                        }),
-                      )
-                    : Center(
-                        child: CircularProgressIndicator(
-                          backgroundColor: Colors.white,
-                          semanticsLabel: "sin info",
-                        ),
-                      ),
+      child: ingredients.length > 0
+          ? SmartRefresher(
+              enablePullDown: true,
+              enablePullUp: true,
+              header: WaterDropHeader(
+                waterDropColor: MyColors.darkPrimaryColor,
+              ),
+              controller: _refreshController,
+              onRefresh: _onRefresh,
+              onLoading: _onLoading,
+              child: ListView.builder(
+                itemCount: ingredients.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return ItemIngredient(
+                    length: ingredients.length,
+                    ingredient: ingredients[index],
+                    longPress: () => print("long press delete"),
+                  );
+                },
+              ),
+              /*
+                * ListView.builder(
+  itemCount: items.length,
+  itemBuilder: (context, index) {
+    return ListTile(
+      title: Text('${items[index]}'),
+    );
+  },
+);*/
+              // children: List.generate(
+              //   ingredients.length,
+              //   (index) {
+              //     return ItemIngredient(
+              //       length: ingredients.length,
+              //       ingredient: ingredients[index],
+              //       longPress: () => print("long press delete"),
+              //     );
+              //   },
+              // ),
+            )
+          : Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
+                semanticsLabel: "sin info",
               ),
             ),
-          )
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           this._displayTextInputDialog(context);
