@@ -136,4 +136,20 @@ class MessageDialog {
         })
       ..show();
   }
+
+  static Future<void> dialogMessageWarningLogOut(BuildContext context,
+      String title, String desc, String okText, Function okPressed) async {
+    return AwesomeDialog(
+      context: context,
+      animType: AnimType.SCALE,
+      headerAnimationLoop: false,
+      dialogType: DialogType.WARNING,
+      title: title,
+      desc: desc,
+      btnOkText: okText,
+      btnOkOnPress: okPressed,
+      btnOkIcon: Icons.warning,
+      btnOkColor: MyColors.warningColor,
+    )..show();
+  }
 }

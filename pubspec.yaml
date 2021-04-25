@@ -39,6 +39,7 @@ dependencies:
   pull_to_refresh: ^1.6.3
   provider: ^2.0.0
   rxdart : ^0.23.1
+  fancy_bar: ^1.2.0
 
 
 dev_dependencies:

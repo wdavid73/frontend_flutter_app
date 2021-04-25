@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:my_restaurant_frontend_app/class/Dish.dart';
 import 'package:my_restaurant_frontend_app/class/Ingredient.dart';
+import 'package:my_restaurant_frontend_app/class/Order.dart';
 import 'package:my_restaurant_frontend_app/class/Positions.dart';
 import 'package:my_restaurant_frontend_app/class/User.dart';
 import 'package:my_restaurant_frontend_app/services/services.dart';
@@ -41,4 +42,10 @@ Position parsePosition(String responseBody) {
   return Position.fromJson(
     jsonDecode(responseBody)["position"],
   );
+}
+
+List<Order> parseOrder(String responseBody) {
+  final parsed =
+      json.decode(responseBody)["order"].cast<Map<String, dynamic>>();
+  return parsed.map<Order>((json) => Order.fromJson(json)).toList();
 }
