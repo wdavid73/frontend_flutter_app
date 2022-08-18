@@ -54,7 +54,7 @@ List<Order> parseOrders(String responseBody) {
   return parsed.map<Order>((json) => Order.fromJson(json)).toList();
 }
 
-Order parseOrder(String responseBody) {
-  dynamic parsed = json.decode(responseBody)["order"].cast<String, dynamic>();
+Order parseOrder(String responseBody, {String key = 'order'} ) {
+  dynamic parsed = json.decode(responseBody)[key].cast<String, dynamic>();
   return Order.fromJson(parsed);
 }

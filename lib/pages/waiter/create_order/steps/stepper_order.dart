@@ -36,7 +36,7 @@ class _StepperOrderState extends State<StepperOrder> {
         currentStep: widget.currentStep,
         type: _stepperType,
         physics: const ScrollPhysics(),
-        onStepTapped: (step) => changeStep(step),
+        /*onStepTapped: (step) => changeStep(step),*/
         onStepContinue: nextStep,
         onStepCancel: backStep,
         controlsBuilder: (BuildContext context, ControlsDetails details) {
@@ -70,11 +70,11 @@ class _StepperOrderState extends State<StepperOrder> {
     );
   }
 
-  changeStep(int step) {
+/*  changeStep(int step) {
     print(
       'change step -> $step',
     );
-  }
+  }*/
 
   nextStep() {
     if (widget.currentStep < 2) {
@@ -82,11 +82,9 @@ class _StepperOrderState extends State<StepperOrder> {
     } else {
       widget.onFinalStep!();
     }
-    print('next step');
   }
 
   backStep() {
     widget.onBackStep!();
-    print('back step');
   }
 }

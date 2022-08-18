@@ -42,9 +42,6 @@ class _CardFlipState extends State<CardFlip>
       builder: (BuildContext context, Widget? child) {
         bool isFront = _controller.value < .5;
         return InkWell(
-          onLongPress: (){
-            print("long press");
-          },
           onTap: () {
             if (_status == AnimationStatus.dismissed) {
               _controller.forward();

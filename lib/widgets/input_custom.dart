@@ -47,7 +47,7 @@ class InputCustom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: inputWidth ?? responsive.wp(80),
       child: TextFormField(
         initialValue: initialValue,

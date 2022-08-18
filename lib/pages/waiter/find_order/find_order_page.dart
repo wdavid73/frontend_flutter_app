@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:my_restaurant_app/class/dish.dart';
@@ -10,8 +7,8 @@ import 'package:my_restaurant_app/services/services.dart';
 import 'package:my_restaurant_app/utils/my_colors.dart';
 import 'package:my_restaurant_app/utils/parse_data.dart';
 import 'package:my_restaurant_app/utils/responsive.dart';
+import 'package:my_restaurant_app/widgets/empty.dart';
 import 'package:my_restaurant_app/widgets/input_custom.dart';
-import 'package:my_restaurant_app/widgets/inputs/button_custom.dart';
 import 'package:my_restaurant_app/widgets/list/list_dishes_simple.dart';
 import 'package:my_restaurant_app/widgets/list/list_drinks_simple.dart';
 import 'package:my_restaurant_app/widgets/title_app_bar.dart';
@@ -53,6 +50,16 @@ class _FindOrderPageState extends State<FindOrderPage> {
         drinks = parseDrinks(response.data, key: 'drinks');
       });
     }
+  }
+
+  actionOrder(int action) async {
+    dynamic token = await _session.get('token');
+    var response = await _api.post(
+        'api_waiter/orders/action/${order.code}/$action/', null, token);
+    print(response.data);
+    setState(() {
+      order = parseOrder(response.data, key: 'data');
+    });
   }
 
   void unFocus() {
@@ -122,11 +129,16 @@ class _FindOrderPageState extends State<FindOrderPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    ListDishesSimple(
-                      responsive: responsive,
-                      dishes: dishes,
-                      shimmerHeight: 200,
-                    ),
+                    dishes.isNotEmpty
+                        ? ListDishesSimple(
+                            responsive: responsive,
+                            dishes: dishes,
+                            shimmerHeight: 200,
+                          )
+                        : Empty(
+                            responsive: responsive,
+                            text: "Without Dishes Yet",
+                          ),
                   ],
                 ),
               ),
@@ -141,79 +153,165 @@ class _FindOrderPageState extends State<FindOrderPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    ListDrinksSimple(
-                      responsive: responsive,
-                      drinks: drinks,
-                      shimmerHeight: 200,
-                    ),
+                    drinks.isNotEmpty
+                        ? ListDrinksSimple(
+                            responsive: responsive,
+                            drinks: drinks,
+                            shimmerHeight: 200,
+                          )
+                        : Empty(
+                            responsive: responsive,
+                            text: "Without Drinks Yet",
+                          ),
                   ],
                 ),
               ),
-              ButtonsContainer(responsive: responsive)
+              order.code != ''
+                  ? order.action != 2
+                      ? order.action != 3
+                          ? order.action != 4
+                              ? Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, top: 10, bottom: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            ButtonTap(
+                                              text: "Delivered",
+                                              onPressed: () => actionOrder(3),
+                                              width: responsive.wp(40),
+                                              height: responsive.hp(5.5),
+                                              withShadow: true,
+                                              textBold: true,
+                                              fillColor: MyColors.successColor,
+                                            ),
+                                            ButtonTap(
+                                              text: "Cancelled",
+                                              onPressed: () => actionOrder(2),
+                                              width: responsive.wp(40),
+                                              height: responsive.hp(5.5),
+                                              withShadow: true,
+                                              textBold: true,
+                                              fillColor:
+                                                  MyColors.darkPrimaryColor,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ButtonTap(
+                                          text: "Edit",
+                                          onPressed: () {},
+                                          width: responsive.wp(80),
+                                          height: responsive.hp(5.5),
+                                          withShadow: true,
+                                          textBold: true,
+                                          icon: Icons.edit,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Container(
+                                    width: responsive.wp(50),
+                                    height: responsive.hp(5),
+                                    decoration: BoxDecoration(
+                                      color: MyColors.successColor,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "Order Padded",
+                                          style: TextStyle(
+                                            fontSize: responsive.dp(1.6),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                          : Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 10, bottom: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ButtonTap(
+                                      text: "Paid",
+                                      onPressed: () => actionOrder(4),
+                                      width: responsive.wp(80),
+                                      height: responsive.hp(5.5),
+                                      withShadow: true,
+                                      textBold: true,
+                                      icon: Icons.paid,
+                                      fillColor: MyColors.darkPrimaryColor,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ButtonTap(
+                                      text: "Edit",
+                                      onPressed: () {},
+                                      width: responsive.wp(80),
+                                      height: responsive.hp(5.5),
+                                      withShadow: true,
+                                      textBold: true,
+                                      icon: Icons.edit,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                      : Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Container(
+                            width: responsive.wp(50),
+                            height: responsive.hp(5),
+                            decoration: BoxDecoration(
+                              color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Order Cancelled",
+                                  style: TextStyle(
+                                    fontSize: responsive.dp(1.6),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                  : const SizedBox(),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ButtonsContainer extends StatelessWidget {
-  const ButtonsContainer({
-    Key? key,
-    required this.responsive,
-  }) : super(key: key);
-
-  final Responsive responsive;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ButtonTap(
-                  text: "Delivered",
-                  onPressed: () {},
-                  width: responsive.wp(40),
-                  height: responsive.hp(5.5),
-                  withShadow: true,
-                  textBold: true,
-                  fillColor: MyColors.successColor,
-                ),
-                ButtonTap(
-                  text: "Cancelled",
-                  onPressed: () {},
-                  width: responsive.wp(40),
-                  height: responsive.hp(5.5),
-                  withShadow: true,
-                  textBold: true,
-                  fillColor: MyColors.darkPrimaryColor,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ButtonTap(
-              text: "Edit",
-              onPressed: () {},
-              width: responsive.wp(80),
-              height: responsive.hp(5.5),
-              withShadow: true,
-              textBold: true,
-              icon: Icons.edit,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -287,14 +385,16 @@ class StateOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<int, String> actions = {
-      1: "delivery",
+      1: "pending",
       2: "cancelled",
-      3: "pending",
+      3: "delivery",
+      4: "padded",
     };
     Map<int, Color> actionsColors = {
-      1: MyColors.successColor,
+      1: MyColors.warningColor,
       2: MyColors.darkPrimaryColor,
-      3: MyColors.warningColor,
+      3: MyColors.successColor,
+      5: MyColors.accentColor
     };
     return Container(
       width: responsive.wp(50),
